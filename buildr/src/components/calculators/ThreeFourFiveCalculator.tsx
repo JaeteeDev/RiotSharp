@@ -15,7 +15,7 @@ export function ThreeFourFiveCalculator() {
   return (
     <CalcLayout
       diagram={
-        <svg viewBox={`0 0 ${w} ${h}`} className="w-full">
+        <svg viewBox={`-36 0 ${w + 36} ${h}`} className="w-full">
           <polygon
             points={`${pad},${pad + a * scale} ${pad},${pad} ${pad + b * scale},${pad + a * scale}`}
             fill="var(--color-signal-500)"

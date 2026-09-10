@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { TrendingUp, TrendingDown, Sparkles } from 'lucide-react'
+import { TrendingUp, TrendingDown, Sparkles, BarChart3 } from 'lucide-react'
 import { learningAreas } from '../data/learningAreas'
 import { useAppStore } from '../store/useAppStore'
 import { useBreadcrumb } from '../store/useUiStore'
@@ -8,6 +8,7 @@ import { computeAllAreaStats, computeOverallProgress, findStrongestArea, findWea
 import { MasteryBadge } from '../components/ui/MasteryBadge'
 import { ProgressRing } from '../components/ui/ProgressRing'
 import { Panel } from '../components/ui/Panel'
+import { EmptyState } from '../components/ui/EmptyState'
 
 function heatColor(score: number) {
   if (score >= 0.85) return 'bg-good-400'
@@ -30,20 +31,21 @@ export function Progress() {
 
   if (overall.completed === 0 && attempts.length === 0) {
     return (
-      <div className="mx-auto max-w-lg px-8 py-20 text-center">
-        <h1 className="font-display text-xl font-semibold text-paper-100">NO PROGRESS DATA YET</h1>
-        <p className="mt-3 text-[13.5px] leading-relaxed text-mute-400">
-          Complete a lesson or your first quiz and BUILDR will start building your skill matrix — showing exactly where you're strong and where to focus next.
-        </p>
-        <button onClick={() => navigate('/course')} className="mt-6 rounded-md bg-signal-500 px-5 py-2.5 text-[13px] font-semibold text-ink-950 hover:bg-signal-400">
-          Start Learning
-        </button>
-      </div>
+      <EmptyState
+        icon={<BarChart3 className="h-6 w-6" strokeWidth={1.25} />}
+        title="No Progress Data Yet"
+        description="Complete a lesson or your first quiz and BUILDR will start building your skill matrix — showing exactly where you're strong and where to focus next."
+        action={
+          <button onClick={() => navigate('/course')} className="rounded-[3px] bg-signal-500 px-5 py-2.5 text-[13px] font-semibold text-ink-950 hover:bg-signal-400">
+            Start Learning
+          </button>
+        }
+      />
     )
   }
 
   return (
-    <div className="mx-auto max-w-[1300px] px-8 py-8">
+    <div className="mx-auto max-w-[1500px] px-8 py-8">
       <h1 className="font-display text-2xl font-semibold text-paper-100">Progress</h1>
       <p className="mt-1 text-[13px] text-mute-400">A skill matrix across every CPC30220 learning area — not a record of formal competency.</p>
 
@@ -83,12 +85,12 @@ export function Progress() {
             <div className="text-[14px] font-medium text-paper-100">{next.title}</div>
           </div>
         </div>
-        <button onClick={() => navigate(`/course/lesson/${next.id}`)} className="rounded-md bg-signal-500 px-4 py-2 text-[12.5px] font-semibold text-ink-950 hover:bg-signal-400">
+        <button onClick={() => navigate(`/course/lesson/${next.id}`)} className="rounded-[3px] bg-signal-500 px-4 py-2 text-[12.5px] font-semibold text-ink-950 hover:bg-signal-400">
           Go
         </button>
       </Panel>
 
-      <div className="mt-8 overflow-x-auto rounded-lg border border-ink-600">
+      <Panel className="mt-8 overflow-x-auto">
         <table className="w-full min-w-[800px] border-collapse text-left text-[13px]">
           <thead>
             <tr className="border-b border-ink-700 bg-ink-900/60 text-mute-500">
@@ -138,7 +140,7 @@ export function Progress() {
             })}
           </tbody>
         </table>
-      </div>
+      </Panel>
     </div>
   )
 }

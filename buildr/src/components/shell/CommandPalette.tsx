@@ -129,7 +129,7 @@ export function CommandPalette() {
             exit={{ opacity: 0, y: -8, scale: 0.98 }}
             transition={{ type: 'spring', stiffness: 420, damping: 34 }}
             onClick={(e) => e.stopPropagation()}
-            className="flex max-h-[60vh] w-full max-w-xl flex-col overflow-hidden rounded-lg border border-ink-600 bg-ink-850 shadow-2xl"
+            className="flex max-h-[60vh] w-full max-w-xl flex-col overflow-hidden rounded-[3px] border border-ink-600 bg-ink-850 shadow-2xl"
           >
             <div className="flex items-center gap-3 border-b border-ink-700 px-4 py-3.5">
               <Search className="h-4 w-4 text-mute-500" />

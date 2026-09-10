@@ -17,7 +17,7 @@ export function DiagonalSquareCalculator() {
   return (
     <CalcLayout
       diagram={
-        <svg viewBox={`0 0 ${w} ${h}`} className="w-full">
+        <svg viewBox={`-36 0 ${w + 36} ${h}`} className="w-full">
           <rect x={pad} y={pad} width={dx} height={dy} fill="none" stroke="var(--color-timber-400)" strokeWidth="2" />
           <motion.line
             x1={pad}
@@ -32,7 +32,7 @@ export function DiagonalSquareCalculator() {
             transition={{ duration: 0.5 }}
           />
           <text x={pad + dx / 2} y={pad - 8} textAnchor="middle" className="text-technical" fontSize="10" fill="var(--color-mute-400)">{length} mm</text>
-          <text x={pad - 8} y={pad + dy / 2} textAnchor="end" className="text-technical" fontSize="10" fill="var(--color-mute-400)">{width}</text>
+          <text x={pad - 10} y={pad + dy / 2} textAnchor="end" className="text-technical" fontSize="10" fill="var(--color-mute-400)">{width} mm</text>
         </svg>
       }
       controls={

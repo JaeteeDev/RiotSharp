@@ -15,7 +15,7 @@ interface IdentifyPanelProps {
 
 export function IdentifyPanel({ targetName, mode, onModeChange, score, attempts, streak, lastResult, onExit }: IdentifyPanelProps) {
   return (
-    <div className="absolute inset-x-4 top-4 z-10 flex items-center justify-between gap-4 rounded-lg border border-ink-600 bg-ink-900/90 px-4 py-3 backdrop-blur">
+    <div className="absolute inset-x-4 top-4 z-10 flex items-center justify-between gap-4 rounded-[3px] border border-ink-600 bg-ink-900/90 px-4 py-3 backdrop-blur">
       <div className="min-w-0">
         <div className="text-technical text-[9.5px] uppercase tracking-wide text-mute-500">Select the</div>
         <div className="font-display truncate text-[17px] font-semibold text-signal-300">{targetName}</div>
@@ -24,7 +24,7 @@ export function IdentifyPanel({ targetName, mode, onModeChange, score, attempts,
       <div className="flex items-center gap-4">
         <Stat icon={<Target className="h-3.5 w-3.5" />} value={`${score}/${attempts}`} />
         <Stat icon={<Flame className="h-3.5 w-3.5" />} value={`${streak}`} />
-        <div className="flex rounded-md border border-ink-600 bg-ink-850 p-0.5">
+        <div className="flex rounded-[3px] border border-ink-600 bg-ink-850 p-0.5">
           {(['training', 'test'] as const).map((m) => (
             <button
               key={m}

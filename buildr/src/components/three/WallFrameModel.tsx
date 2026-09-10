@@ -1,20 +1,8 @@
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { Html } from '@react-three/drei'
+import { Html, Edges, Line } from '@react-three/drei'
 import * as THREE from 'three'
-import { wallComponents, WALL_HEIGHT, type WallComponentGroup, type WallComponentInstance } from '../../data/wallFrame'
-
-const categoryColor: Record<string, string> = {
-  'top-plate': '#8f6a3c',
-  'bottom-plate': '#8f6a3c',
-  'common-stud': '#c79f6a',
-  'end-stud': '#c79f6a',
-  'jamb-stud': '#d8b989',
-  lintel: '#e0a15c',
-  trimmer: '#d8b989',
-  'cripple-stud': '#cdb384',
-  nogging: '#b3854e',
-}
+import { wallComponents, WALL_HEIGHT, categoryColor, type WallComponentGroup, type WallComponentInstance } from '../../data/wallFrame'
 
 const groupExplodeOrder: Record<WallComponentGroup, number> = {
   plates: 0,
@@ -58,6 +46,8 @@ function ComponentMesh({ comp, selected, hovered, wrongMarked, visible, explodeP
   })
 
   const color = wrongMarked ? '#eb5757' : selected ? '#ff7f32' : hovered ? '#ffb37a' : categoryColor[comp.category]
+  const labelY = targetY + comp.size[1] / 2 + 0.18
+  const swatch = wrongMarked ? '#eb5757' : categoryColor[comp.category]
 
   return (
     <group>
@@ -92,13 +82,18 @@ function ComponentMesh({ comp, selected, hovered, wrongMarked, visible, explodeP
           emissive={selected || wrongMarked ? color : '#000000'}
           emissiveIntensity={selected ? 0.35 : wrongMarked ? 0.5 : 0}
         />
+        {visible && <Edges threshold={20} color={selected ? '#3a1c00' : '#00000090'} opacity={selected ? 0.5 : 0.4} transparent />}
       </mesh>
       {showLabel && visible && (
-        <Html position={[bx, targetY + comp.size[1] / 2 + 0.12, targetZ]} center distanceFactor={8} occlude={false}>
-          <div className="pointer-events-none whitespace-nowrap rounded border border-signal-400/60 bg-ink-900/95 px-2 py-1 text-[10px] font-medium text-signal-200 shadow-lg">
-            {comp.name}
-          </div>
-        </Html>
+        <>
+          <Line points={[[bx, targetY, targetZ], [bx, labelY - 0.03, targetZ]]} color={selected ? '#ff7f32' : '#5fa4d6'} lineWidth={1} transparent opacity={0.7} />
+          <Html position={[bx, labelY, targetZ]} center distanceFactor={8} occlude={false}>
+            <div className="pointer-events-none flex items-center gap-1.5 whitespace-nowrap rounded-sm border border-ink-600 bg-ink-900/95 px-2 py-1 text-[10px] font-medium text-paper-200 shadow-lg">
+              <span className="h-1.5 w-1.5 shrink-0 rounded-[1px]" style={{ background: swatch }} />
+              <span className="text-technical">{comp.name.toUpperCase()}</span>
+            </div>
+          </Html>
+        </>
       )}
     </group>
   )

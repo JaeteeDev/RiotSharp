@@ -11,6 +11,7 @@ import { useBreadcrumb } from '../store/useUiStore'
 import { computeLearningAreaStats } from '../lib/progress'
 import { MasteryBadge } from '../components/ui/MasteryBadge'
 import { SkillTree } from '../components/course/SkillTree'
+import { Panel } from '../components/ui/Panel'
 
 export function Course() {
   useBreadcrumb(['Course'])
@@ -33,13 +34,13 @@ export function Course() {
   }, [location.hash, view])
 
   return (
-    <div className="mx-auto max-w-[1400px] px-8 py-8">
+    <div className="mx-auto max-w-[1500px] px-8 py-8">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-display text-2xl font-semibold text-paper-100">Course Map</h1>
           <p className="mt-1 text-[13px] text-mute-400">20 learning areas built from the CPC30220 unit structure — foundations to finish.</p>
         </div>
-        <div className="flex rounded-md border border-ink-600 bg-ink-850 p-1">
+        <div className="flex rounded-[3px] border border-ink-600 bg-ink-850 p-1">
           <ViewToggle active={view === 'list'} onClick={() => setView('list')} icon={<List className="h-3.5 w-3.5" />} label="List" />
           <ViewToggle active={view === 'tree'} onClick={() => setView('tree')} icon={<GitBranch className="h-3.5 w-3.5" />} label="Skill Tree" />
         </div>
@@ -49,7 +50,7 @@ export function Course() {
         {view === 'tree' ? (
           <SkillTree />
         ) : (
-          <div className="flex flex-col gap-3">
+          <Panel className="overflow-hidden">
             {learningAreas.map((area, i) => {
               const stat = computeLearningAreaStats(area.id, lessonProgress, questionAttempts)
               const areaUnits = unitsForLearningArea(area.id)
@@ -58,13 +59,17 @@ export function Course() {
                 <motion.button
                   key={area.id}
                   id={area.id}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: Math.min(i * 0.02, 0.3) }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: Math.min(i * 0.015, 0.3) }}
                   onClick={() => (areaLessons[0] ? navigate(`/course/lesson/${areaLessons[0].id}`) : undefined)}
-                  className="group flex items-center gap-5 rounded-lg border border-ink-600 bg-ink-850/50 px-5 py-4 text-left transition-colors hover:border-ink-500 hover:bg-ink-800/60"
+                  className={clsx(
+                    'group relative flex w-full items-center gap-5 px-5 py-4 text-left transition-colors hover:bg-ink-800/50',
+                    i !== 0 && 'border-t border-ink-800',
+                  )}
                 >
-                  <span className="text-technical w-8 shrink-0 text-[13px] text-mute-600">{area.number}</span>
+                  <span className="pointer-events-none absolute left-0 top-0 h-full w-0 bg-signal-400 transition-all duration-200 group-hover:w-[2px]" />
+                  <span className="font-display w-9 shrink-0 text-[20px] font-semibold text-ink-500 transition-colors group-hover:text-signal-500/70">{area.number}</span>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2.5">
                       <span className="truncate text-[15px] font-medium text-paper-100">{area.title}</span>
@@ -79,7 +84,7 @@ export function Course() {
                             e.stopPropagation()
                             navigate(`/course/unit/${u.code}`)
                           }}
-                          className="text-technical rounded border border-ink-600 px-1.5 py-0.5 text-[9.5px] text-mute-500 hover:border-blue-500/50 hover:text-blue-300"
+                          className="text-technical rounded-sm border border-ink-600 px-1.5 py-0.5 text-[9.5px] text-mute-500 hover:border-blue-500/50 hover:text-blue-300"
                         >
                           {u.code}
                         </span>
@@ -87,7 +92,7 @@ export function Course() {
                       {!areaUnits.length && <span className="text-technical text-[9.5px] text-mute-600">Cross-topic</span>}
                     </div>
                   </div>
-                  <div className="hidden w-32 shrink-0 sm:block">
+                  <div className="hidden w-36 shrink-0 sm:block">
                     <div className="h-1.5 w-full overflow-hidden rounded-full bg-ink-700">
                       <div className="h-full rounded-full bg-signal-400 transition-all" style={{ width: `${stat.progressPct}%` }} />
                     </div>
@@ -97,7 +102,7 @@ export function Course() {
                 </motion.button>
               )
             })}
-          </div>
+          </Panel>
         )}
       </div>
     </div>
@@ -109,7 +114,7 @@ function ViewToggle({ active, onClick, icon, label }: { active: boolean; onClick
     <button
       onClick={onClick}
       className={clsx(
-        'flex items-center gap-1.5 rounded px-3 py-1.5 text-[12.5px] font-medium transition-colors',
+        'flex items-center gap-1.5 rounded-[3px] px-3 py-1.5 text-[12.5px] font-medium transition-colors',
         active ? 'bg-ink-700 text-paper-100' : 'text-mute-500 hover:text-paper-200',
       )}
     >

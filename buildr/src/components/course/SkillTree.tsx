@@ -66,7 +66,7 @@ export function SkillTree() {
   const height = maxRows * ROW_H + 48
 
   return (
-    <div className="overflow-auto rounded-lg border border-ink-600 bg-ink-900/40 p-6">
+    <div className="overflow-auto rounded-[3px] border border-ink-600 bg-ink-900/40 p-6">
       <div className="relative" style={{ width, height }}>
         <svg width={width} height={height} className="pointer-events-none absolute left-0 top-0">
           {learningAreas.map((area) =>
@@ -106,7 +106,7 @@ export function SkillTree() {
               onClick={() => navigate(`/course#${area.id}`)}
               style={{ left: pos.x, top: pos.y, width: NODE_W, height: NODE_H }}
               className={clsx(
-                'absolute flex flex-col justify-center rounded-md border px-3 py-2 text-left transition-all',
+                'absolute flex flex-col justify-center rounded-[3px] border px-3 py-2 text-left transition-all',
                 stat.progressPct >= 100
                   ? 'border-good-400/50 bg-good-400/10'
                   : stat.progressPct > 0

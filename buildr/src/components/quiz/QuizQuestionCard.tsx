@@ -75,7 +75,7 @@ export function QuizQuestionCard({ question, onAnswered }: { question: QuizQuest
                 disabled={revealed}
                 onClick={() => toggleOption(i)}
                 className={clsx(
-                  'flex items-center justify-between rounded-md border px-4 py-3 text-left text-[14px] transition-colors',
+                  'flex items-center justify-between rounded-[3px] border px-4 py-3 text-left text-[14px] transition-colors',
                   !revealed && isSelected && 'border-signal-400 bg-signal-500/10 text-paper-100',
                   !revealed && !isSelected && 'border-ink-600 text-paper-300 hover:border-ink-500',
                   revealed && isCorrectOpt && 'border-good-400/50 bg-good-400/10 text-good-400',
@@ -100,7 +100,7 @@ export function QuizQuestionCard({ question, onAnswered }: { question: QuizQuest
             disabled={revealed}
             onChange={(e) => setNumeric(e.target.value)}
             placeholder="Your answer"
-            className="text-technical w-40 rounded-md border border-ink-600 bg-ink-900 px-3 py-2.5 text-[15px] text-paper-100 outline-none focus:border-signal-400"
+            className="text-technical w-40 rounded-[3px] border border-ink-600 bg-ink-900 px-3 py-2.5 text-[15px] text-paper-100 outline-none focus:border-signal-400"
           />
           {question.numericUnit && <span className="text-technical text-[13px] text-mute-500">{question.numericUnit}</span>}
           {revealed && (
@@ -120,7 +120,7 @@ export function QuizQuestionCard({ question, onAnswered }: { question: QuizQuest
                 disabled={revealed || order.includes(i)}
                 onClick={() => clickOrderItem(i)}
                 className={clsx(
-                  'rounded-md border px-3 py-2 text-[13px] transition-colors',
+                  'rounded-[3px] border px-3 py-2 text-[13px] transition-colors',
                   order.includes(i) ? 'border-ink-700 text-mute-600 line-through' : 'border-ink-600 text-paper-300 hover:border-signal-400',
                 )}
               >
@@ -130,7 +130,7 @@ export function QuizQuestionCard({ question, onAnswered }: { question: QuizQuest
           </div>
           <div className="text-technical text-[11px] text-mute-500">Click each step in the order it should happen. Selected: {order.length}/{question.orderItems?.length}</div>
           {revealed && (
-            <div className="mt-1 rounded-md bg-ink-900/60 px-3 py-2 text-[12.5px] text-mute-400">
+            <div className="mt-1 rounded-[3px] bg-ink-900/60 px-3 py-2 text-[12.5px] text-mute-400">
               Correct order: {question.correctOrder?.map((idx) => question.orderItems?.[idx]).join(' → ')}
             </div>
           )}
@@ -141,7 +141,7 @@ export function QuizQuestionCard({ question, onAnswered }: { question: QuizQuest
         <button
           onClick={submit}
           disabled={!canSubmit}
-          className="w-fit rounded-md bg-signal-500 px-5 py-2.5 text-[13px] font-semibold text-ink-950 transition-colors hover:bg-signal-400 disabled:cursor-not-allowed disabled:opacity-40"
+          className="w-fit rounded-[3px] bg-signal-500 px-5 py-2.5 text-[13px] font-semibold text-ink-950 transition-colors hover:bg-signal-400 disabled:cursor-not-allowed disabled:opacity-40"
         >
           Check Answer
         </button>
@@ -150,7 +150,7 @@ export function QuizQuestionCard({ question, onAnswered }: { question: QuizQuest
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
-            className={clsx('overflow-hidden rounded-lg border px-4 py-3.5', correct ? 'border-good-400/30 bg-good-400/5' : 'border-bad-400/30 bg-bad-400/5')}
+            className={clsx('overflow-hidden rounded-[3px] border px-4 py-3.5', correct ? 'border-good-400/30 bg-good-400/5' : 'border-bad-400/30 bg-bad-400/5')}
           >
             <div className={clsx('flex items-center gap-2 text-[13px] font-semibold', correct ? 'text-good-400' : 'text-bad-400')}>
               {correct ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
@@ -166,7 +166,7 @@ export function QuizQuestionCard({ question, onAnswered }: { question: QuizQuest
 
 export function NextButton({ onClick, isLast }: { onClick: () => void; isLast: boolean }) {
   return (
-    <button onClick={onClick} className="flex w-fit items-center gap-2 rounded-md border border-ink-500 px-5 py-2.5 text-[13px] font-medium text-paper-200 hover:border-signal-400 hover:text-signal-300">
+    <button onClick={onClick} className="flex w-fit items-center gap-2 rounded-[3px] border border-ink-500 px-5 py-2.5 text-[13px] font-medium text-paper-200 hover:border-signal-400 hover:text-signal-300">
       {isLast ? 'See Results' : 'Next Question'}
       <ArrowRight className="h-3.5 w-3.5" />
     </button>

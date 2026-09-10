@@ -46,7 +46,7 @@ export function UnitDetail() {
   const progressPct = lessons.length ? Math.round((completedLessons / lessons.length) * 100) : 0
 
   return (
-    <div className="mx-auto max-w-[1100px] px-8 py-8">
+    <div className="mx-auto max-w-[1300px] px-8 py-8">
       <div className="text-technical mb-2 text-[11px] uppercase tracking-[0.16em] text-blue-400">
         {area.number} · {area.title}
       </div>
@@ -56,7 +56,7 @@ export function UnitDetail() {
         {unit.type === 'core' ? 'Core Unit' : 'Elective Unit'}
       </span>
 
-      <div className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-[1fr_280px]">
+      <div className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-[1fr_320px]">
         <div className="flex flex-col gap-5">
           <Panel className="p-5" title="Overview">
             <p className="text-[14px] leading-relaxed text-paper-300">{unit.summary}</p>
@@ -97,7 +97,7 @@ export function UnitDetail() {
                   <button
                     key={l.id}
                     onClick={() => navigate(`/course/lesson/${l.id}`)}
-                    className="flex items-center justify-between rounded-md border border-ink-700 px-3.5 py-2.5 text-left transition-colors hover:border-ink-500"
+                    className="flex items-center justify-between rounded-[3px] border border-ink-700 px-3.5 py-2.5 text-left transition-colors hover:border-ink-500"
                   >
                     <div>
                       <div className="text-[13.5px] font-medium text-paper-200">{l.title}</div>
@@ -116,7 +116,7 @@ export function UnitDetail() {
               <p className="text-[13px] text-mute-400">{quizQuestions.length} questions available covering this unit.</p>
               <button
                 onClick={() => navigate('/quiz/session/unit', { state: { learningAreaId: area.id } })}
-                className="mt-3 rounded-md bg-signal-500 px-4 py-2 text-[13px] font-semibold text-ink-950 hover:bg-signal-400"
+                className="mt-3 rounded-[3px] bg-signal-500 px-4 py-2 text-[13px] font-semibold text-ink-950 hover:bg-signal-400"
               >
                 Start Unit Quiz
               </button>
@@ -139,7 +139,7 @@ export function UnitDetail() {
             <p className="text-[12.5px] leading-relaxed text-mute-400">
               Formal competency in this unit is only achieved through your RTO's supervised assessment — never from completing lessons or quizzes here.
             </p>
-            <label className="mt-3 flex items-center gap-2.5 rounded-md border border-ink-700 px-3 py-2.5 text-[12.5px] text-paper-300">
+            <label className="mt-3 flex items-center gap-2.5 rounded-[3px] border border-ink-700 px-3 py-2.5 text-[12.5px] text-paper-300">
               <input
                 type="checkbox"
                 checked={recorded}

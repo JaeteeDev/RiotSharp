@@ -7,6 +7,7 @@ import { ComponentInspector } from '../components/workshop/ComponentInspector'
 import { BuildTimeline } from '../components/workshop/BuildTimeline'
 import { IdentifyPanel } from '../components/workshop/IdentifyPanel'
 import { FindMistakePanel } from '../components/workshop/FindMistakePanel'
+import { TechRange } from '../components/ui/TechRange'
 import { useBreadcrumb } from '../store/useUiStore'
 import {
   wallComponents,
@@ -19,8 +20,8 @@ const WallFrameScene = lazy(() => import('../components/three/WallFrameScene').t
 
 function ScenePlaceholder() {
   return (
-    <div className="flex h-full w-full items-center justify-center">
-      <div className="text-technical text-[11px] uppercase tracking-wide text-mute-600">Loading model…</div>
+    <div className="scan-loader flex h-full w-full items-center justify-center">
+      <div className="text-technical text-[11px] uppercase tracking-wide text-mute-600">Initialising model…</div>
     </div>
   )
 }
@@ -173,7 +174,7 @@ export function Workshop() {
   return (
     <div className="flex h-full flex-col">
       <div className="flex items-center gap-3 border-b border-ink-700 bg-ink-900/60 px-5 py-2.5">
-        <div className="flex rounded-md border border-ink-600 bg-ink-850 p-1">
+        <div className="flex rounded-[3px] border border-ink-600 bg-ink-850 p-1">
           <ModeTab active={mode === 'model'} onClick={() => setMode('model')} icon={<Boxes className="h-3.5 w-3.5" />} label="Explore & Build" />
           <ModeTab
             active={mode === 'identify'}
@@ -200,29 +201,23 @@ export function Workshop() {
         {mode === 'model' && (
           <>
             <div className="hairline mx-1 h-5 w-px" />
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2.5">
               <span className="text-technical text-[10px] uppercase text-mute-500">Explode</span>
-              <input
-                type="range"
-                min={0}
-                max={100}
-                value={explodePct}
-                onChange={(e) => setExplodePct(Number(e.target.value))}
-                className="h-1 w-32 accent-signal-500"
-              />
-              <span className="text-technical w-9 text-[11px] text-mute-400">{explodePct}%</span>
+              <TechRange min={0} max={100} value={explodePct} onChange={setExplodePct} className="w-32" />
+              <span className="text-technical w-10 rounded-[3px] border border-ink-700 bg-ink-900 px-1.5 py-0.5 text-center text-[10.5px] text-paper-300">{explodePct}%</span>
             </div>
+            <div className="hairline mx-1 h-5 w-px" />
             <button
               onClick={() => setMeasureMode((m) => !m)}
               className={clsx(
-                'flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-[11.5px] transition-colors',
+                'flex items-center gap-1.5 rounded-[3px] border px-2.5 py-1.5 text-[11.5px] transition-colors',
                 measureMode ? 'border-blue-400 bg-blue-500/15 text-blue-300' : 'border-ink-600 text-mute-400 hover:text-paper-200',
               )}
             >
               <Ruler className="h-3.5 w-3.5" />
               Measure
             </button>
-            <button onClick={() => setHiddenIds(new Set())} className="flex items-center gap-1.5 rounded-md border border-ink-600 px-2.5 py-1.5 text-[11.5px] text-mute-400 hover:text-paper-200">
+            <button onClick={() => setHiddenIds(new Set())} className="flex items-center gap-1.5 rounded-[3px] border border-ink-600 px-2.5 py-1.5 text-[11.5px] text-mute-400 hover:text-paper-200">
               <Eye className="h-3.5 w-3.5" />
               Show All
             </button>
@@ -230,14 +225,14 @@ export function Workshop() {
         )}
 
         <div className="ml-auto flex items-center gap-2">
-          <button onClick={() => setResetToken((t) => t + 1)} className="flex items-center gap-1.5 rounded-md border border-ink-600 px-2.5 py-1.5 text-[11.5px] text-mute-400 hover:text-paper-200">
+          <button onClick={() => setResetToken((t) => t + 1)} className="flex items-center gap-1.5 rounded-[3px] border border-ink-600 px-2.5 py-1.5 text-[11.5px] text-mute-400 hover:text-paper-200">
             <RotateCcw className="h-3.5 w-3.5" />
             Reset Camera
           </button>
         </div>
       </div>
 
-      <div className="grid h-full min-h-0 flex-1 grid-cols-[220px_1fr_280px]">
+      <div className="grid h-full min-h-0 flex-1 grid-cols-[236px_1fr_300px]">
         <div className="h-full min-h-0 overflow-y-auto border-r border-ink-700 bg-ink-900/50">
           {mode === 'model' || mode === 'find-mistake' || identifyModeShowsTree(mode, identifyMode) ? (
             <ModelTree selectedId={selectedId} hoveredId={hoveredId} hiddenIds={hiddenIds} onSelect={setSelectedId} onHover={setHoveredId} onToggleHide={toggleHide} />
@@ -315,7 +310,7 @@ function ModeTab({ active, onClick, icon, label }: { active: boolean; onClick: (
   return (
     <button
       onClick={onClick}
-      className={clsx('flex items-center gap-1.5 rounded px-3 py-1.5 text-[12px] font-medium transition-colors', active ? 'bg-ink-700 text-paper-100' : 'text-mute-500 hover:text-paper-200')}
+      className={clsx('flex items-center gap-1.5 rounded-[3px] px-3 py-1.5 text-[12px] font-medium transition-colors', active ? 'bg-ink-700 text-paper-100' : 'text-mute-500 hover:text-paper-200')}
     >
       {icon}
       {label}

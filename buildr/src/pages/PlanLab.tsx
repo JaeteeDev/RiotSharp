@@ -57,13 +57,13 @@ export function PlanLab() {
   return (
     <div className="flex h-full flex-col">
       <div className="flex items-center gap-2 border-b border-ink-700 bg-ink-900/60 px-5 py-2.5">
-        <button onClick={() => setZoom((z) => Math.min(2.2, z + 0.2))} className="flex h-8 w-8 items-center justify-center rounded-md border border-ink-600 text-mute-400 hover:text-paper-200">
+        <button onClick={() => setZoom((z) => Math.min(2.2, z + 0.2))} className="flex h-8 w-8 items-center justify-center rounded-[3px] border border-ink-600 text-mute-400 hover:text-paper-200">
           <ZoomIn className="h-3.5 w-3.5" />
         </button>
-        <button onClick={() => setZoom((z) => Math.max(0.5, z - 0.2))} className="flex h-8 w-8 items-center justify-center rounded-md border border-ink-600 text-mute-400 hover:text-paper-200">
+        <button onClick={() => setZoom((z) => Math.max(0.5, z - 0.2))} className="flex h-8 w-8 items-center justify-center rounded-[3px] border border-ink-600 text-mute-400 hover:text-paper-200">
           <ZoomOut className="h-3.5 w-3.5" />
         </button>
-        <button onClick={() => setZoom(1)} className="flex h-8 w-8 items-center justify-center rounded-md border border-ink-600 text-mute-400 hover:text-paper-200">
+        <button onClick={() => setZoom(1)} className="flex h-8 w-8 items-center justify-center rounded-[3px] border border-ink-600 text-mute-400 hover:text-paper-200">
           <RotateCcw className="h-3.5 w-3.5" />
         </button>
         <div className="hairline mx-1 h-5 w-px" />
@@ -78,7 +78,7 @@ export function PlanLab() {
               setSolved(new Set())
             }}
             className={clsx(
-              'flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-[12px] font-medium transition-colors',
+              'flex items-center gap-1.5 rounded-[3px] border px-3 py-1.5 text-[12px] font-medium transition-colors',
               challengeMode ? 'border-signal-400 bg-signal-500/15 text-signal-300' : 'border-ink-600 text-mute-400 hover:text-paper-200',
             )}
           >
@@ -89,7 +89,7 @@ export function PlanLab() {
       </div>
 
       <div className="relative grid min-h-0 flex-1 grid-cols-1 lg:grid-cols-[1fr_300px]">
-        <div className="relative overflow-auto bg-ink-950 p-8">
+        <div className="relative flex items-center justify-center overflow-auto bg-ink-950 p-8">
           <div style={{ width: 900 * zoom, transition: 'width 0.15s' }}>
             <FloorPlanSvg showDimensions={showDimensions} showAnnotations={showAnnotations} highlightId={highlightId} onPartClick={handlePartClick} />
           </div>
@@ -140,7 +140,7 @@ function ToggleChip({ active, onClick, icon, label }: { active: boolean; onClick
     <button
       onClick={onClick}
       className={clsx(
-        'flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-[11.5px] transition-colors',
+        'flex items-center gap-1.5 rounded-[3px] border px-2.5 py-1.5 text-[11.5px] transition-colors',
         active ? 'border-blue-400/50 bg-blue-500/10 text-blue-300' : 'border-ink-600 text-mute-400 hover:text-paper-200',
       )}
     >

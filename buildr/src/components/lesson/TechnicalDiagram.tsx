@@ -98,7 +98,7 @@ const registry: Record<string, () => ReactElement> = {
 export function TechnicalDiagram({ diagramId, caption }: { diagramId: string; caption?: string }) {
   const Component = registry[diagramId]
   return (
-    <div className="rounded-lg border border-ink-600 bg-ink-900/60 p-5">
+    <div className="rounded-[3px] border border-ink-600 bg-ink-900/60 p-5">
       {Component ? <Component /> : <div className="flex h-32 items-center justify-center text-[12px] text-mute-600">Diagram in development</div>}
       {caption && <p className="mt-3 text-center text-[11.5px] text-mute-500">{caption}</p>}
     </div>

@@ -60,7 +60,7 @@ export function Reference() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search terminology…"
-            className="w-full rounded-md border border-ink-600 bg-ink-850 py-2 pl-9 pr-3 text-[13px] text-paper-100 outline-none focus:border-signal-400"
+            className="w-full rounded-[3px] border border-ink-600 bg-ink-850 py-2 pl-9 pr-3 text-[13px] text-paper-100 outline-none focus:border-signal-400"
           />
         </div>
         <div className="mb-3 flex flex-wrap gap-1.5">
@@ -69,13 +69,13 @@ export function Reference() {
             <CategoryChip key={c} label={categoryLabels[c]} active={category === c} onClick={() => setCategory(c)} />
           ))}
         </div>
-        <div className="flex max-h-[calc(100vh-260px)] flex-col gap-1 overflow-y-auto rounded-lg border border-ink-700 bg-ink-900/40 p-1.5">
+        <div className="flex max-h-[calc(100vh-260px)] flex-col gap-1 overflow-y-auto rounded-[3px] border border-ink-700 bg-ink-900/40 p-1.5">
           {filtered.map((g) => (
             <button
               key={g.id}
               onClick={() => selectTerm(g.id)}
               className={clsx(
-                'rounded-md px-3 py-2 text-left transition-colors',
+                'rounded-[3px] px-3 py-2 text-left transition-colors',
                 selected?.id === g.id ? 'bg-signal-500/15 text-signal-300' : 'text-paper-300 hover:bg-ink-800',
               )}
             >

@@ -43,21 +43,26 @@ export function HouseScene({ selectedLayer, exploded, visibleLayers, autoRotate 
   return (
     <Canvas shadows dpr={[1, 1.75]} gl={{ antialias: true }}>
       <PerspectiveCamera makeDefault position={[7.5, 4.6, 8]} fov={38} />
-      <color attach="background" args={['#0c0e11']} />
-      <fog attach="fog" args={['#0c0e11', 14, 26]} />
+      <color attach="background" args={['#0a0c0f']} />
+      <fog attach="fog" args={['#0a0c0f', 13, 25]} />
 
-      <ambientLight intensity={0.55} />
-      <directionalLight position={[6, 9, 4]} intensity={1.4} castShadow shadow-mapSize={[1024, 1024]} />
-      <directionalLight position={[-6, 4, -6]} intensity={0.3} color="#5fa4d6" />
+      <hemisphereLight args={['#3f5a78', '#0a0b0d', 0.45]} />
+      <ambientLight intensity={0.22} />
+      <directionalLight position={[6, 9, 4]} intensity={1.55} color="#fff4e0" castShadow shadow-mapSize={[2048, 2048]}>
+        <orthographicCamera attach="shadow-camera" args={[-8, 8, 8, -8, 0.1, 30]} />
+      </directionalLight>
+      <directionalLight position={[-7, 3, -5]} intensity={0.5} color="#5fa4d6" />
+      <directionalLight position={[0, 2, -8]} intensity={0.6} color="#ff9d5c" />
 
       <Suspense fallback={null}>
         <group position={[0, -1.2, 0]}>
           <HouseModel selectedLayer={selectedLayer} exploded={exploded} visibleLayers={visibleLayers} />
-          <ContactShadows position={[0, -0.02, 0]} opacity={0.45} scale={14} blur={2.2} far={4} resolution={512} color="#000000" />
+          <ContactShadows position={[0, -0.01, 0]} opacity={0.55} scale={16} blur={2.4} far={4} resolution={512} color="#000000" />
+          <ContactShadows position={[0, -0.015, 0]} opacity={0.3} scale={7} blur={1.4} far={2} resolution={512} color="#000000" />
         </group>
       </Suspense>
 
-      <gridHelper args={[24, 24, '#1b1f27', '#14171d']} position={[0, -1.2, 0]} />
+      <gridHelper args={[28, 28, '#213247', '#151c26']} position={[0, -1.2, 0]} />
 
       <OrbitControls
         ref={controlsRef}

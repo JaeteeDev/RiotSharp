@@ -31,7 +31,7 @@ export function LessonBlockRenderer({ block, index }: { block: LessonBlock; inde
       const style = calloutStyles[block.tone]
       const Icon = style.icon
       return (
-        <motion.div {...fadeIn} className={`flex gap-3 rounded-lg border px-4 py-3.5 ${style.cls}`}>
+        <motion.div {...fadeIn} className={`flex gap-3 rounded-[3px] border px-4 py-3.5 ${style.cls}`}>
           <Icon className="mt-0.5 h-4 w-4 shrink-0" />
           <div>
             <div className="text-[13px] font-semibold">{block.title}</div>
@@ -45,7 +45,7 @@ export function LessonBlockRenderer({ block, index }: { block: LessonBlock; inde
       return (
         <motion.div {...fadeIn} className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
           {block.terms.map((t, i) => (
-            <div key={i} className="rounded-md border border-ink-700 bg-ink-900/40 px-3.5 py-2.5">
+            <div key={i} className="rounded-[3px] border border-ink-700 bg-ink-900/40 px-3.5 py-2.5">
               <div className="text-technical text-[11px] uppercase tracking-wide text-timber-400">{t.term}</div>
               <div className="mt-1 text-[12.5px] leading-relaxed text-mute-400">{t.definition}</div>
             </div>
@@ -83,7 +83,7 @@ export function LessonBlockRenderer({ block, index }: { block: LessonBlock; inde
 
     case 'worked-example':
       return (
-        <motion.div {...fadeIn} className="rounded-lg border border-timber-500/25 bg-timber-500/[0.04] p-5">
+        <motion.div {...fadeIn} className="rounded-[3px] border border-timber-500/25 bg-timber-500/[0.04] p-5">
           <div className="text-technical mb-3 text-[10px] uppercase tracking-wide text-timber-400">Worked Example · {block.title}</div>
           <div className="mb-3 flex flex-wrap gap-x-5 gap-y-1">
             {block.given.map((g, i) => (
@@ -121,7 +121,7 @@ export function LessonBlockRenderer({ block, index }: { block: LessonBlock; inde
         <motion.div {...fadeIn} className="flex flex-col gap-2.5">
           <div className="text-technical text-[10px] uppercase tracking-wide text-bad-400">Common Mistakes</div>
           {block.items.map((m, i) => (
-            <div key={i} className="flex gap-3 rounded-md border border-bad-400/20 bg-bad-400/[0.04] px-3.5 py-3">
+            <div key={i} className="flex gap-3 rounded-[3px] border border-bad-400/20 bg-bad-400/[0.04] px-3.5 py-3">
               <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-bad-400" />
               <div>
                 <div className="text-[13px] font-medium text-paper-200">{m.mistake}</div>

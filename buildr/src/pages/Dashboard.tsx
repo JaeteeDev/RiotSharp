@@ -1,10 +1,10 @@
 import { lazy, Suspense, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { RotateCcw, Boxes, Layers as LayersIcon, Flame, Target, TrendingDown, ArrowRight } from 'lucide-react'
+import { RotateCcw, Boxes, Flame, Target, TrendingDown, Layers as LayersIcon, AlertTriangle, ArrowRight } from 'lucide-react'
 import { HOUSE_LAYERS, type HouseLayerId } from '../components/three/houseLayers'
 import { Panel } from '../components/ui/Panel'
-import { ProgressRing } from '../components/ui/ProgressRing'
+import { AnimatedNumber } from '../components/ui/AnimatedNumber'
 import { useAppStore } from '../store/useAppStore'
 import { useBreadcrumb } from '../store/useUiStore'
 import {
@@ -21,8 +21,8 @@ const HouseScene = lazy(() => import('../components/three/HouseScene').then((m) 
 
 function ScenePlaceholder() {
   return (
-    <div className="flex h-full w-full items-center justify-center">
-      <div className="text-technical text-[11px] uppercase tracking-wide text-mute-600">Loading model…</div>
+    <div className="scan-loader flex h-full w-full items-center justify-center">
+      <div className="text-technical text-[11px] uppercase tracking-wide text-mute-600">Initialising model…</div>
     </div>
   )
 }
@@ -49,10 +49,10 @@ export function Dashboard() {
   const lessonPct = overall.pct
 
   return (
-    <div className="mx-auto max-w-[1600px] px-8 py-8">
+    <div className="mx-auto flex h-full max-w-[1680px] flex-col px-8 py-7">
       {/* HERO */}
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,420px)_1fr]">
-        <div className="flex flex-col justify-between gap-8">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,400px)_1fr]">
+        <div className="flex flex-col justify-between">
           <div>
             <motion.p
               initial={{ opacity: 0, y: 8 }}
@@ -65,7 +65,7 @@ export function Dashboard() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.05 }}
-              className="font-display mt-2 text-[38px] font-semibold leading-[1.05] tracking-tight text-paper-100"
+              className="font-display mt-2 text-[36px] font-semibold leading-[1.05] tracking-tight text-paper-100"
             >
               Continue your
               <br />
@@ -81,32 +81,35 @@ export function Dashboard() {
             </motion.p>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <StatTile label="Qualification Progress" value={`${lessonPct}%`} icon={<Target className="h-3.5 w-3.5" />} />
-            <StatTile label="Quiz Accuracy" value={accuracy === null ? '—' : `${accuracy}%`} icon={<TrendingDown className="h-3.5 w-3.5" />} />
-            <StatTile label="Learning Streak" value={`${streakDays} day${streakDays === 1 ? '' : 's'}`} icon={<Flame className="h-3.5 w-3.5" />} />
-            <StatTile label="Revision Due" value={`${revisionDueCount}`} icon={<LayersIcon className="h-3.5 w-3.5" />} />
-          </div>
-
-          <div className="flex items-center gap-4 rounded-lg border border-ink-600 bg-ink-850/60 p-4">
-            <ProgressRing value={lessonPct} size={64} strokeWidth={5} />
-            <div className="min-w-0">
-              <div className="text-technical text-[10px] uppercase tracking-wide text-mute-500">Weakest area right now</div>
-              <div className="truncate text-[14px] font-medium text-paper-100">
-                {weakest ? learningAreaById(weakest.areaId)?.title : 'Not enough data yet'}
-              </div>
-              {weakest && (
-                <button onClick={() => navigate(`/quiz/session/weak`)} className="mt-1 text-[12px] text-signal-400 hover:text-signal-300">
-                  Practise this weak area →
-                </button>
-              )}
+          <Panel className="mt-6 overflow-hidden">
+            <div className="grid grid-cols-2">
+              <StatCell label="Qualification" icon={<Target className="h-3.5 w-3.5" />} value={lessonPct} suffix="%" />
+              <StatCell label="Quiz Accuracy" icon={<TrendingDown className="h-3.5 w-3.5" />} value={accuracy} suffix="%" border="left" />
+              <StatCell label="Streak" icon={<Flame className="h-3.5 w-3.5" />} value={streakDays} suffix={streakDays === 1 ? ' day' : ' days'} border="top" />
+              <StatCell label="Revision Due" icon={<LayersIcon className="h-3.5 w-3.5" />} value={revisionDueCount} border="both" />
             </div>
-          </div>
+            <div className="hairline" />
+            <button
+              onClick={() => weakest && navigate('/quiz/session/weak')}
+              disabled={!weakest}
+              className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors enabled:hover:bg-ink-800/40 disabled:cursor-default"
+            >
+              <AlertTriangle className="h-4 w-4 shrink-0 text-warn-400" />
+              <div className="min-w-0 flex-1">
+                <div className="text-technical text-[9.5px] uppercase tracking-wide text-mute-600">Weakest area right now</div>
+                <div className="truncate text-[13.5px] font-medium text-paper-100">
+                  {weakest ? learningAreaById(weakest.areaId)?.title : 'Not enough data yet'}
+                </div>
+              </div>
+              {weakest && <ArrowRight className="h-3.5 w-3.5 shrink-0 text-mute-600" />}
+            </button>
+          </Panel>
         </div>
 
-        <Panel className="relative h-[440px] overflow-hidden xl:h-[520px]" corner={false}>
+        <Panel className="corner-ticks relative h-[460px] overflow-hidden xl:h-[600px]">
           <div className="absolute left-4 top-4 z-10 flex items-center gap-2">
-            <span className="text-technical rounded-full border border-ink-600 bg-ink-900/80 px-2.5 py-1 text-[10px] uppercase tracking-wide text-mute-400">
+            <span className="text-technical flex items-center gap-1.5 rounded-sm border border-ink-600 bg-ink-900/85 px-2.5 py-1 text-[10px] uppercase tracking-wide text-mute-400">
+              <span className="h-1.5 w-1.5 rounded-full bg-signal-400" />
               Interactive Model · Timber House Framing
             </span>
           </div>
@@ -124,14 +127,14 @@ export function Dashboard() {
             <HouseScene selectedLayer={selectedLayer} exploded={exploded} resetToken={resetToken} />
           </Suspense>
 
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink-950/90 to-transparent p-4 pt-10">
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink-950 via-ink-950/70 to-transparent p-4 pt-12">
             <div className="pointer-events-auto flex flex-wrap gap-1.5">
               {HOUSE_LAYERS.map((layer) => (
                 <button
                   key={layer.id}
                   onClick={() => setSelectedLayer((cur) => (cur === layer.id ? null : layer.id))}
                   className={clsx(
-                    'text-technical rounded-full border px-3 py-1.5 text-[10px] uppercase tracking-wide transition-colors',
+                    'text-technical rounded-sm border px-3 py-1.5 text-[10px] uppercase tracking-wide transition-colors',
                     selectedLayer === layer.id
                       ? 'border-signal-400 bg-signal-500/20 text-signal-300'
                       : 'border-ink-600 bg-ink-900/70 text-mute-400 hover:border-ink-500 hover:text-paper-200',
@@ -146,18 +149,18 @@ export function Dashboard() {
       </div>
 
       {/* CONTINUE LEARNING */}
-      <div className="mt-8 grid grid-cols-1 gap-5 lg:grid-cols-[1.6fr_1fr]">
-        <Panel className="p-6" title="Continue Learning">
-          <div className="flex items-center justify-between gap-6">
+      <div className="mt-6 grid flex-1 grid-cols-1 gap-5 lg:grid-cols-[1.6fr_1fr]">
+        <Panel className="flex flex-col p-6" title="Continue Learning">
+          <div className="flex flex-1 items-center justify-between gap-6">
             <div className="min-w-0 flex-1">
               <div className="text-technical mb-1 text-[10px] uppercase tracking-wide text-mute-500">
                 {nextLessonArea?.number} · {nextLessonArea?.title}
               </div>
-              <div className="font-display text-2xl font-semibold text-paper-100">{nextLesson.title}</div>
+              <div className="font-display text-[26px] font-semibold text-paper-100">{nextLesson.title}</div>
               <p className="mt-1.5 max-w-md text-[13px] text-mute-400">{nextLesson.subtitle}</p>
               <button
                 onClick={() => navigate(`/course/lesson/${nextLesson.id}`)}
-                className="mt-5 flex items-center gap-2 rounded-md bg-signal-500 px-4 py-2 text-[13px] font-semibold text-ink-950 transition-colors hover:bg-signal-400"
+                className="mt-6 flex items-center gap-2 rounded-[3px] bg-signal-500 px-4 py-2 text-[13px] font-semibold text-ink-950 transition-colors hover:bg-signal-400"
               >
                 Continue
                 <ArrowRight className="h-3.5 w-3.5" />
@@ -167,13 +170,13 @@ export function Dashboard() {
           </div>
         </Panel>
 
-        <Panel className="p-6" title="15 Minute Session">
+        <Panel className="flex flex-col p-6" title="15 Minute Session">
           <p className="text-[13px] leading-relaxed text-mute-400">
             A short mixed session — one revision exercise, a quick lesson, five quiz questions, a calculation and a component ID drill.
           </p>
           <button
             onClick={() => navigate('/quiz/session/daily')}
-            className="mt-5 flex items-center gap-2 rounded-md border border-ink-500 px-4 py-2 text-[13px] font-medium text-paper-200 transition-colors hover:border-signal-400 hover:text-signal-300"
+            className="mt-auto flex w-fit items-center gap-2 rounded-[3px] border border-ink-500 px-4 py-2 text-[13px] font-medium text-paper-200 transition-colors hover:border-signal-400 hover:text-signal-300"
           >
             Start Session
             <ArrowRight className="h-3.5 w-3.5" />
@@ -184,14 +187,34 @@ export function Dashboard() {
   )
 }
 
-function StatTile({ label, value, icon }: { label: string; value: string; icon: React.ReactNode }) {
+function StatCell({
+  label,
+  value,
+  suffix,
+  icon,
+  border,
+}: {
+  label: string
+  value: number | null
+  suffix?: string
+  icon: React.ReactNode
+  border?: 'left' | 'top' | 'both'
+}) {
   return (
-    <div className="rounded-lg border border-ink-600 bg-ink-850/60 px-4 py-3">
+    <div
+      className={clsx(
+        'px-4 py-3.5',
+        (border === 'left' || border === 'both') && 'border-l border-ink-700',
+        (border === 'top' || border === 'both') && 'border-t border-ink-700',
+      )}
+    >
       <div className="flex items-center gap-1.5 text-mute-500">
         {icon}
-        <span className="text-technical text-[9.5px] uppercase tracking-wide">{label}</span>
+        <span className="text-technical text-[9px] uppercase tracking-wide">{label}</span>
       </div>
-      <div className="font-display mt-1.5 text-2xl font-semibold text-paper-100">{value}</div>
+      <div className="font-display mt-1.5 text-[26px] font-semibold text-paper-100">
+        {value === null ? <span className="text-mute-600">—</span> : <AnimatedNumber value={value} suffix={suffix} />}
+      </div>
     </div>
   )
 }
@@ -203,7 +226,7 @@ function IconButton({ children, onClick, active, label }: { children: React.Reac
       aria-label={label}
       title={label}
       className={clsx(
-        'flex h-8 w-8 items-center justify-center rounded-md border transition-colors',
+        'flex h-8 w-8 items-center justify-center rounded-sm border transition-colors',
         active ? 'border-signal-400 bg-signal-500/20 text-signal-300' : 'border-ink-600 bg-ink-900/70 text-mute-400 hover:text-paper-200',
       )}
     >
@@ -214,7 +237,7 @@ function IconButton({ children, onClick, active, label }: { children: React.Reac
 
 function MiniFrameIcon() {
   return (
-    <svg width="96" height="72" viewBox="0 0 96 72" className="shrink-0 opacity-90">
+    <svg width="110" height="82" viewBox="0 0 96 72" className="shrink-0 opacity-90">
       <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3, duration: 0.6 }}>
         <rect x="8" y="10" width="80" height="52" fill="none" stroke="var(--color-timber-400)" strokeWidth="2" />
         {[24, 40, 56, 72].map((x, i) => (

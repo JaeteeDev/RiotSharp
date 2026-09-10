@@ -152,6 +152,142 @@ body {
   height: 1px;
 }
 
+/* ---- Technical range slider ---- */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-signal-400) 0%, var(--color-signal-400) var(--range-fill, 0%), var(--color-ink-600) var(--range-fill, 0%), var(--color-ink-600) 100%);
+  border-radius: 0;
+  outline: none;
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  background: var(--color-ink-950);
+  border: 2px solid var(--color-signal-400);
+  border-radius: 1px;
+  transform: rotate(45deg);
+  cursor: grab;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  background: var(--color-signal-500);
+}
+input[type="range"]::-webkit-slider-thumb:active {
+  cursor: grabbing;
+  transform: rotate(45deg) scale(1.15);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  background: var(--color-ink-950);
+  border: 2px solid var(--color-signal-400);
+  border-radius: 1px;
+  transform: rotate(45deg);
+  cursor: grab;
+}
+input[type="range"]::-moz-range-track {
+  height: 4px;
+  background: var(--color-ink-600);
+}
+input[type="range"]::-moz-range-progress {
+  height: 4px;
+  background: var(--color-signal-400);
+}
+
+/* ---- Spec-sheet rows (Workshop inspector, technical readouts) ---- */
+.spec-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-block: 0.5rem;
+  border-bottom: 1px solid var(--color-ink-800);
+}
+.spec-row:last-child {
+  border-bottom: none;
+}
+
+/* ---- Tree connector guides (Workshop model tree) ---- */
+.tree-guide {
+  position: relative;
+}
+.tree-guide::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--color-ink-600);
+}
+
+/* ---- Corner ticks, reusable on any relatively-positioned box ---- */
+.corner-ticks::before,
+.corner-ticks::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+}
+.corner-ticks::before {
+  left: -1px;
+  top: -1px;
+  border-left: 1px solid var(--color-signal-500);
+  border-top: 1px solid var(--color-signal-500);
+}
+.corner-ticks::after {
+  right: -1px;
+  bottom: -1px;
+  border-right: 1px solid var(--color-signal-500);
+  border-bottom: 1px solid var(--color-signal-500);
+}
+
+/* ---- Decorative ruler margin (reading columns) ---- */
+.ruler-margin {
+  position: relative;
+}
+.ruler-margin::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.4em;
+  bottom: 0.4em;
+  width: 16px;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--color-ink-600) 0,
+    var(--color-ink-600) 1px,
+    transparent 1px,
+    transparent 24px
+  );
+  background-position: left top;
+  opacity: 0.9;
+}
+
+/* ---- Scanline loading state ---- */
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+.scan-loader {
+  position: relative;
+  overflow: hidden;
+}
+.scan-loader::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--color-signal-500) 12%, transparent), transparent);
+  animation: scan 1.6s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.001ms !important;

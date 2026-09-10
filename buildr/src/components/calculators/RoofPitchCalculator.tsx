@@ -2,6 +2,7 @@ import { useState } from 'react'
 import clsx from 'clsx'
 import { CalcLayout, NumberField } from './CalcLayout'
 import { Panel } from '../ui/Panel'
+import { TechRange } from '../ui/TechRange'
 
 function RoofCrossSection({ pitchDeg }: { pitchDeg: number }) {
   const w = 320
@@ -43,7 +44,7 @@ export function RoofPitchCalculator() {
 
   return (
     <div>
-      <div className="mb-5 flex rounded-md border border-ink-600 bg-ink-850 p-1 w-fit">
+      <div className="mb-5 flex rounded-[3px] border border-ink-600 bg-ink-850 p-1 w-fit">
         {(['learn', 'practise', 'calculate'] as const).map((t) => (
           <button
             key={t}
@@ -62,7 +63,7 @@ export function RoofPitchCalculator() {
             Roof pitch is the angle between the roof surface and the horizontal. It's calculated from two measurements: <strong className="text-timber-300">rise</strong> (vertical height gained)
             and <strong className="text-timber-300">run</strong> (horizontal distance covered) — the same rise/run relationship used in stair and drainage-grade calculations, just applied to a roof plane.
           </p>
-          <div className="mt-4 rounded-md bg-ink-900/60 px-4 py-3">
+          <div className="mt-4 rounded-[3px] bg-ink-900/60 px-4 py-3">
             <span className="text-technical text-[13px] text-timber-300">Pitch (°) = arctan(Rise ÷ Run)</span>
           </div>
           <p className="mt-4 text-[13.5px] leading-relaxed text-paper-300">
@@ -73,11 +74,13 @@ export function RoofPitchCalculator() {
 
       {tab === 'practise' && (
         <Panel className="p-6">
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_260px]">
-            <RoofCrossSection pitchDeg={pitchDeg} />
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,440px)_260px]">
+            <div className="mx-auto w-full max-w-[440px]">
+              <RoofCrossSection pitchDeg={pitchDeg} />
+            </div>
             <div>
               <div className="text-technical mb-2 text-[10px] uppercase tracking-wide text-mute-500">Drag to change pitch</div>
-              <input type="range" min={0} max={45} step={0.5} value={pitchDeg} onChange={(e) => setPitchDeg(Number(e.target.value))} className="w-full accent-signal-500" />
+              <TechRange min={0} max={45} step={0.5} value={pitchDeg} onChange={setPitchDeg} className="w-full" />
               <div className="font-display mt-2 text-3xl font-semibold text-signal-300">{pitchDeg.toFixed(1)}°</div>
               <p className="mt-3 text-[12.5px] leading-relaxed text-mute-500">
                 Watch how the roof rotates around the wall top-plate line as pitch changes — the run stays fixed while the rise (and therefore the rafter length) grows with a steeper pitch.
@@ -95,7 +98,7 @@ export function RoofPitchCalculator() {
               <NumberField label="Building span" value={span} onChange={setSpan} unit="mm" />
               <div className="flex items-center justify-between gap-3 py-1.5">
                 <span className="text-[13px] text-mute-400">Pitch</span>
-                <input type="range" min={0} max={45} step={0.5} value={pitchDeg} onChange={(e) => setPitchDeg(Number(e.target.value))} className="w-32 accent-signal-500" />
+                <TechRange min={0} max={45} step={0.5} value={pitchDeg} onChange={setPitchDeg} className="w-32" />
                 <span className="text-technical w-12 text-right text-[13px] text-paper-200">{pitchDeg.toFixed(1)}°</span>
               </div>
             </>

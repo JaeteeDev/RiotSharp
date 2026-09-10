@@ -63,7 +63,7 @@ export function Settings() {
         <ToggleRow label="Reduced Motion" checked={settings.reducedMotion} onChange={(v) => updateSettings({ reducedMotion: v })} description="Minimises motion across the app, independent of your OS setting." />
         <div className="mt-4 flex items-center justify-between py-2">
           <span className="text-[13.5px] text-paper-200">3D Model Quality</span>
-          <div className="flex rounded-md border border-ink-600 bg-ink-900 p-1">
+          <div className="flex rounded-[3px] border border-ink-600 bg-ink-900 p-1">
             {(['standard', 'high'] as const).map((q) => (
               <button
                 key={q}
@@ -77,7 +77,7 @@ export function Settings() {
         </div>
         <div className="mt-2 flex items-center justify-between py-2">
           <span className="text-[13.5px] text-paper-200">UI Scale</span>
-          <div className="flex rounded-md border border-ink-600 bg-ink-900 p-1">
+          <div className="flex rounded-[3px] border border-ink-600 bg-ink-900 p-1">
             {(['compact', 'comfortable', 'spacious'] as const).map((scale) => (
               <button
                 key={scale}
@@ -91,7 +91,7 @@ export function Settings() {
         </div>
         <div className="mt-2 flex items-center justify-between py-2">
           <span className="text-[13.5px] text-paper-200">Units</span>
-          <span className="text-technical rounded-md border border-ink-700 px-3 py-1 text-[12px] text-mute-500">Metric (mm) — locked</span>
+          <span className="text-technical rounded-[3px] border border-ink-700 px-3 py-1 text-[12px] text-mute-500">Metric (mm) — locked</span>
         </div>
       </Panel>
 
@@ -111,11 +111,11 @@ export function Settings() {
           All training data is stored locally in this browser — no account or server required. Export it as a backup, or import a previous export.
         </p>
         <div className="mt-4 flex gap-3">
-          <button onClick={exportData} className="flex items-center gap-1.5 rounded-md border border-ink-500 px-4 py-2 text-[12.5px] text-paper-200 hover:border-ink-400">
+          <button onClick={exportData} className="flex items-center gap-1.5 rounded-[3px] border border-ink-500 px-4 py-2 text-[12.5px] text-paper-200 hover:border-ink-400">
             <Download className="h-3.5 w-3.5" />
             Export Data
           </button>
-          <button onClick={() => fileInputRef.current?.click()} className="flex items-center gap-1.5 rounded-md border border-ink-500 px-4 py-2 text-[12.5px] text-paper-200 hover:border-ink-400">
+          <button onClick={() => fileInputRef.current?.click()} className="flex items-center gap-1.5 rounded-[3px] border border-ink-500 px-4 py-2 text-[12.5px] text-paper-200 hover:border-ink-400">
             <Upload className="h-3.5 w-3.5" />
             Import Data
           </button>
@@ -126,19 +126,19 @@ export function Settings() {
       <Panel className="mt-6 p-6" tone="danger" title="Danger Zone">
         <p className="text-[12.5px] leading-relaxed text-mute-500">Permanently clear all lesson progress, quiz history, flashcard history and settings from this browser.</p>
         {!confirmReset ? (
-          <button onClick={() => setConfirmReset(true)} className="mt-4 flex items-center gap-1.5 rounded-md border border-bad-400/40 px-4 py-2 text-[12.5px] text-bad-400 hover:bg-bad-400/10">
+          <button onClick={() => setConfirmReset(true)} className="mt-4 flex items-center gap-1.5 rounded-[3px] border border-bad-400/40 px-4 py-2 text-[12.5px] text-bad-400 hover:bg-bad-400/10">
             <AlertTriangle className="h-3.5 w-3.5" />
             Reset Training Data
           </button>
         ) : (
-          <div className="mt-4 flex items-center gap-3 rounded-md border border-bad-400/40 bg-bad-400/5 px-4 py-3">
+          <div className="mt-4 flex items-center gap-3 rounded-[3px] border border-bad-400/40 bg-bad-400/5 px-4 py-3">
             <span className="text-[12.5px] text-paper-200">Are you sure? This cannot be undone.</span>
             <button
               onClick={() => {
                 resetTrainingData()
                 setConfirmReset(false)
               }}
-              className="rounded-md bg-bad-400 px-3 py-1.5 text-[12px] font-semibold text-ink-950"
+              className="rounded-[3px] bg-bad-400 px-3 py-1.5 text-[12px] font-semibold text-ink-950"
             >
               Yes, reset everything
             </button>

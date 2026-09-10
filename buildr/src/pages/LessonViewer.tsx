@@ -48,8 +48,8 @@ export function LessonViewer() {
   const nextLesson = siblingLessons[currentIndex + 1]
 
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-[1fr_320px]">
-      <div className="mx-auto w-full max-w-[820px] px-8 py-8">
+    <div className="grid grid-cols-1 xl:grid-cols-[1fr_340px]">
+      <div className="ruler-margin mx-auto w-full max-w-[900px] px-8 py-8 pl-12 lg:pl-14">
         <div className="text-technical mb-2 flex items-center gap-2 text-[11px] uppercase tracking-[0.14em] text-blue-400">
           {area.number} · {area.title}
           {lesson.unitCode && <span className="text-mute-600">· {lesson.unitCode}</span>}
@@ -71,7 +71,7 @@ export function LessonViewer() {
           ))}
         </div>
 
-        <div className="mt-10 rounded-lg border border-ink-600 bg-ink-850/50 p-5">
+        <div className="mt-10 rounded-[3px] border border-ink-600 bg-ink-850/50 p-5">
           <div className="text-technical mb-3 text-[10px] uppercase tracking-wide text-mute-500">How confident are you?</div>
           <div className="flex gap-2">
             {confidenceOptions.map((c) => (
@@ -79,7 +79,7 @@ export function LessonViewer() {
                 key={c.level}
                 onClick={() => setLessonConfidence(lesson.id, c.level)}
                 className={clsx(
-                  'flex-1 rounded-md border px-3 py-2.5 text-[12.5px] font-medium transition-colors',
+                  'flex-1 rounded-[3px] border px-3 py-2.5 text-[12.5px] font-medium transition-colors',
                   progress?.confidence === c.level
                     ? 'border-signal-400 bg-signal-500/15 text-signal-300'
                     : 'border-ink-600 text-mute-400 hover:border-ink-500 hover:text-paper-200',
@@ -94,7 +94,7 @@ export function LessonViewer() {
         <div className="mt-6 flex items-center justify-between">
           <button
             onClick={() => setLessonStatus(lesson.id, 'strong')}
-            className="rounded-md bg-signal-500 px-5 py-2.5 text-[13px] font-semibold text-ink-950 transition-colors hover:bg-signal-400"
+            className="rounded-[3px] bg-signal-500 px-5 py-2.5 text-[13px] font-semibold text-ink-950 transition-colors hover:bg-signal-400"
           >
             Mark Lesson Complete
           </button>
@@ -141,7 +141,7 @@ export function LessonViewer() {
         {lesson.quizIds.length > 0 && (
           <button
             onClick={() => navigate('/quiz/session/unit', { state: { learningAreaId: area.id } })}
-            className="w-full rounded-md border border-ink-600 px-4 py-2.5 text-[12.5px] font-medium text-paper-200 hover:border-signal-400 hover:text-signal-300"
+            className="w-full rounded-[3px] border border-ink-600 px-4 py-2.5 text-[12.5px] font-medium text-paper-200 hover:border-signal-400 hover:text-signal-300"
           >
             Quiz Me On This Topic
           </button>

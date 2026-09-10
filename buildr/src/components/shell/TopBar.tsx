@@ -35,7 +35,7 @@ export function TopBar() {
 
       <button
         onClick={() => setCommandPaletteOpen(true)}
-        className="flex w-72 items-center gap-2.5 rounded-md border border-ink-600 bg-ink-850 px-3 py-1.5 text-left text-sm text-mute-500 transition-colors hover:border-ink-500 hover:text-mute-400"
+        className="flex w-72 items-center gap-2.5 rounded-[3px] border border-ink-600 bg-ink-850 px-3 py-1.5 text-left text-sm text-mute-500 transition-colors hover:border-ink-500 hover:text-mute-400"
       >
         <Search className="h-3.5 w-3.5" />
         <span className="flex-1 text-[13px]">Search BUILDR…</span>
@@ -44,7 +44,7 @@ export function TopBar() {
 
       <button
         onClick={() => navigate('/calculators')}
-        className="flex items-center gap-1.5 rounded-md border border-ink-600 px-3 py-1.5 text-[13px] font-medium text-mute-400 transition-colors hover:border-blue-500/50 hover:text-blue-300"
+        className="flex items-center gap-1.5 rounded-[3px] border border-ink-600 px-3 py-1.5 text-[13px] font-medium text-mute-400 transition-colors hover:border-blue-500/50 hover:text-blue-300"
       >
         <Calculator className="h-3.5 w-3.5" />
         Quick Calculator
@@ -53,7 +53,7 @@ export function TopBar() {
       {next && (
         <button
           onClick={() => navigate(`/course/lesson/${next.id}`)}
-          className="flex items-center gap-1.5 rounded-md border border-signal-500/40 bg-signal-500/10 px-3 py-1.5 text-[13px] font-medium text-signal-300 transition-colors hover:bg-signal-500/20"
+          className="flex items-center gap-1.5 rounded-[3px] border border-signal-500/40 bg-signal-500/10 px-3 py-1.5 text-[13px] font-medium text-signal-300 transition-colors hover:bg-signal-500/20"
         >
           <PlayCircle className="h-3.5 w-3.5" />
           Continue Learning

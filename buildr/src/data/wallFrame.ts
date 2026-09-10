@@ -44,6 +44,18 @@ export const WALL_HEIGHT = 2.4
 const STUD_T = 0.09
 const STUD_D = 0.045
 
+export const categoryColor: Record<WallComponentCategory, string> = {
+  'top-plate': '#8f6a3c',
+  'bottom-plate': '#8f6a3c',
+  'common-stud': '#c79f6a',
+  'end-stud': '#c79f6a',
+  'jamb-stud': '#d8b989',
+  lintel: '#e0a15c',
+  trimmer: '#d8b989',
+  'cripple-stud': '#cdb384',
+  nogging: '#b3854e',
+}
+
 export const categoryInfo: Record<WallComponentCategory, WallComponentInfo> = {
   'top-plate': {
     label: 'Top Plate',

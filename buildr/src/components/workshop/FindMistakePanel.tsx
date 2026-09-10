@@ -4,7 +4,7 @@ import { mistakeScenarios } from '../../data/wallFrame'
 
 export function FindMistakePanel({ foundIds, onExit }: { foundIds: Set<string>; onExit: () => void }) {
   return (
-    <div className="absolute inset-x-4 top-4 z-10 flex flex-col gap-3 rounded-lg border border-ink-600 bg-ink-900/90 px-4 py-3 backdrop-blur">
+    <div className="absolute inset-x-4 top-4 z-10 flex flex-col gap-3 rounded-[3px] border border-ink-600 bg-ink-900/90 px-4 py-3 backdrop-blur">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Search className="h-4 w-4 text-signal-400" />
@@ -23,7 +23,7 @@ export function FindMistakePanel({ foundIds, onExit }: { foundIds: Set<string>; 
                 key={m.componentId}
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
-                className="flex gap-2 rounded-md border border-good-400/25 bg-good-400/5 px-3 py-2"
+                className="flex gap-2 rounded-[3px] border border-good-400/25 bg-good-400/5 px-3 py-2"
               >
                 <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-good-400" />
                 <div>

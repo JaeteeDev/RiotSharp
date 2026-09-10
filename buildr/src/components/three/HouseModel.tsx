@@ -1,5 +1,6 @@
 import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
+import { Edges } from '@react-three/drei'
 import * as THREE from 'three'
 import type { HouseLayerId } from './houseLayers'
 
@@ -33,6 +34,7 @@ function Beam({ position, size, color = TIMBER, selected, dimmed, rotation }: Be
         emissive={selected ? SIGNAL : '#000000'}
         emissiveIntensity={selected ? 0.25 : 0}
       />
+      {!dimmed && <Edges threshold={20} color={selected ? '#3a1c00' : '#000000'} opacity={0.35} transparent />}
     </mesh>
   )
 }
