@@ -3,6 +3,9 @@ import { AlertTriangle, Info, ShieldAlert, XCircle } from 'lucide-react'
 import type { LessonBlock } from '../../types'
 import { TechnicalDiagram } from './TechnicalDiagram'
 import { MiniQuestionBlock } from './MiniQuestionBlock'
+import { StudSpacingInteractive } from './StudSpacingInteractive'
+import { LoadPathDiagram } from './LoadPathDiagram'
+import { QuizCtaBlock } from './QuizCtaBlock'
 
 const calloutStyles = {
   info: { icon: Info, cls: 'border-blue-500/30 bg-blue-500/[0.05] text-blue-300' },
@@ -10,7 +13,7 @@ const calloutStyles = {
   safety: { icon: ShieldAlert, cls: 'border-bad-400/30 bg-bad-400/[0.06] text-bad-400' },
 }
 
-export function LessonBlockRenderer({ block, index }: { block: LessonBlock; index: number }) {
+export function LessonBlockRenderer({ block, index, onMiniQuestionAnswered }: { block: LessonBlock; index: number; onMiniQuestionAnswered?: (correct: boolean) => void }) {
   const fadeIn = {
     initial: { opacity: 0, y: 10 },
     whileInView: { opacity: 1, y: 0 },
@@ -105,7 +108,7 @@ export function LessonBlockRenderer({ block, index }: { block: LessonBlock; inde
     case 'mini-question':
       return (
         <motion.div {...fadeIn}>
-          <MiniQuestionBlock question={block.question} />
+          <MiniQuestionBlock question={block.question} onAnswered={onMiniQuestionAnswered} />
         </motion.div>
       )
 
@@ -129,6 +132,27 @@ export function LessonBlockRenderer({ block, index }: { block: LessonBlock; inde
               </div>
             </div>
           ))}
+        </motion.div>
+      )
+
+    case 'stud-spacing-interactive':
+      return (
+        <motion.div {...fadeIn}>
+          <StudSpacingInteractive defaultLength={block.defaultLength} defaultCentres={block.defaultCentres} />
+        </motion.div>
+      )
+
+    case 'load-path':
+      return (
+        <motion.div {...fadeIn}>
+          <LoadPathDiagram variant={block.variant} />
+        </motion.div>
+      )
+
+    case 'quiz-cta':
+      return (
+        <motion.div {...fadeIn}>
+          <QuizCtaBlock label={block.label} description={block.description} learningAreaId={block.learningAreaId} />
         </motion.div>
       )
 

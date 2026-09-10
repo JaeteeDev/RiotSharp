@@ -103,7 +103,7 @@ export function SkillTree() {
               key={area.id}
               onMouseEnter={() => setHovered(area.id)}
               onMouseLeave={() => setHovered(null)}
-              onClick={() => navigate(`/course#${area.id}`)}
+              onClick={() => navigate(`/course/area/${area.id}`)}
               style={{ left: pos.x, top: pos.y, width: NODE_W, height: NODE_H }}
               className={clsx(
                 'absolute flex flex-col justify-center rounded-[3px] border px-3 py-2 text-left transition-all',

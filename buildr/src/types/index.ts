@@ -37,6 +37,20 @@ export interface LearningArea {
   prerequisites: string[]
 }
 
+/**
+ * A module groups a run of lessons within one learning area (e.g. Wall
+ * Framing's "Wall Frame Fundamentals" module holds 11 lessons). Learning
+ * areas without any defined modules still work everywhere — curriculum.ts
+ * synthesises a single default module wrapping their lessons.
+ */
+export interface LearningModule {
+  id: string
+  learningAreaId: string
+  order: number
+  title: string
+  description: string
+}
+
 export type LessonBlock =
   | { kind: 'text'; heading?: string; body: string }
   | { kind: 'callout'; tone: 'info' | 'warning' | 'safety'; title: string; body: string }
@@ -46,6 +60,9 @@ export type LessonBlock =
   | { kind: 'mini-question'; question: MiniQuestion }
   | { kind: 'image-diagram'; diagramId: string; caption?: string }
   | { kind: 'mistakes'; items: { mistake: string; why: string }[] }
+  | { kind: 'stud-spacing-interactive'; defaultLength?: number; defaultCentres?: 450 | 600 }
+  | { kind: 'load-path'; variant: 'general' | 'opening' }
+  | { kind: 'quiz-cta'; label: string; description: string; learningAreaId: string }
 
 export interface MiniQuestion {
   id: string
@@ -59,6 +76,7 @@ export interface Lesson {
   id: string
   unitCode?: string
   learningAreaId: string
+  moduleId?: string
   order: number
   title: string
   subtitle: string
@@ -157,6 +175,19 @@ export interface RevisionItem {
   learningAreaId: string
   dueAt: number
   reason: 'low-confidence' | 'quiz-miss' | 'scheduled'
+}
+
+/**
+ * Transparent 0-100 weakness score per learning area. Incorrect quiz answers
+ * and "Need Revision" confidence ratings push it up; correct answers and
+ * confident ratings bring it down. A small time-decay is added at read time
+ * (see lib/progress.ts) rather than stored, so it never goes stale.
+ */
+export interface TopicWeakness {
+  areaId: string
+  score: number
+  lastUpdatedAt: number
+  reason: RevisionItem['reason']
 }
 
 export interface Achievement {

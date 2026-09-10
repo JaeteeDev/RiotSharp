@@ -24,7 +24,8 @@ export function buildQuiz(mode: QuizMode, opts: BuildQuizOpts = {}): QuizQuestio
   switch (mode) {
     case 'unit':
       if (opts.learningAreaId) {
-        return shuffle(questions.filter((q) => q.learningAreaId === opts.learningAreaId))
+        const pool = questions.filter((q) => q.learningAreaId === opts.learningAreaId)
+        return shuffle(pool).slice(0, Math.min(pool.length, 15))
       }
       return shuffle(questions).slice(0, 10)
     case 'topic':

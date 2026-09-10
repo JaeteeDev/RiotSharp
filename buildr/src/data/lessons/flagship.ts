@@ -193,56 +193,6 @@ export const flagshipLessons: Lesson[] = [
     quizIds: ['q-floor-1', 'q-floor-2', 'q-floor-3'],
   },
 
-  // F — Wall Framing ----------------------------------------------------------
-  {
-    id: 'lesson-wall-framing',
-    unitCode: 'CPCCCA3004',
-    learningAreaId: 'wall-framing',
-    order: 1,
-    title: 'Wall Framing Fundamentals',
-    subtitle: 'Plates, studs and openings',
-    estMinutes: 18,
-    objectives: [
-      'Name every major component of a standard timber wall frame',
-      'Explain how a door/window opening changes the standard stud layout',
-      'Describe the general wall-framing construction sequence',
-    ],
-    blocks: [
-      { kind: 'text', body: 'A wall frame looks complex at first glance but is really a small number of repeating parts, arranged to do two jobs at once: carry load, and create openings where you need them. Once you can name every part on sight, the Workshop\'s 3D wall frame will make the whole system click.' },
-      { kind: 'terms', terms: [
-        { term: 'Top / Bottom Plate', definition: 'Horizontal members capping the top and base of the frame.' },
-        { term: 'Common Stud', definition: 'A regularly-spaced vertical member with no opening role.' },
-        { term: 'Jamb Stud', definition: 'Full-height stud forming the side of a door/window opening.' },
-        { term: 'Lintel', definition: 'Spans above an opening, carrying load into the jamb studs.' },
-        { term: 'Trimmer', definition: 'Forms the sill below a window opening.' },
-        { term: 'Cripple Stud', definition: 'Shortened stud continuing the layout above a lintel or below a sill.' },
-        { term: 'Nogging', definition: 'Horizontal blocking between studs for bracing and fixing.' },
-      ] },
-      { kind: 'callout', tone: 'info', title: 'Terminology varies by region and method', body: 'Some of these terms shift slightly between states, employers and construction methods (for example "nogging" is sometimes called "dwang" in other English-speaking countries, and "header" is used interchangeably with "lintel"). This course uses the terms most common in Australian residential framing, and flags variations where they matter.' },
-      { kind: 'image-diagram', diagramId: 'wall-frame-labelled', caption: 'A labelled wall frame with a door and window opening.' },
-      { kind: 'list', heading: 'General build sequence', ordered: true, items: [
-        'Inspect the plan for wall dimensions and opening positions',
-        'Set out plates — mark overall length and opening positions',
-        'Mark stud centres along the plates',
-        'Prepare framing members (cut studs, lintels, trimmers to length)',
-        'Position and fix members between the plates',
-        'Square the assembled frame using a diagonal check',
-        'Brace the frame (conceptually, per the bracing design) before raising',
-      ] },
-      { kind: 'mini-question', question: {
-        id: 'mq-wall-1', prompt: 'Which member spans a door/window opening and carries the load above it into the jamb studs?', options: ['Nogging', 'Lintel', 'Bottom plate'], correctIndex: 1,
-        explanation: 'The lintel (or header) spans the opening and transfers the load down into the jamb studs either side.',
-      } },
-      { kind: 'mistakes', items: [
-        { mistake: 'Fixing cripple studs before the lintel is positioned and checked', why: 'The lintel position determines exactly where the cripple studs land — get the lintel wrong and every cripple stud above it is also wrong.' },
-        { mistake: 'Skipping the diagonal check because the frame "looks square"', why: 'A frame can look square to the eye and still be out by enough to cause problems fitting linings, cladding or the roof structure later.' },
-      ] },
-      { kind: 'text', heading: 'Practise it', body: 'Head to the Workshop to explore a fully interactive 3D wall frame — click any component to inspect it, explode the model to see how it goes together, or try Build Mode to step through the sequence yourself.' },
-    ],
-    relatedTermIds: ['top-plate', 'bottom-plate', 'common-stud', 'jamb-stud', 'lintel', 'trimmer', 'cripple-stud', 'nogging', 'stud-spacing', 'bracing'],
-    quizIds: ['q-wall-1', 'q-wall-2', 'q-wall-3', 'q-wall-4', 'q-wall-5'],
-  },
-
   // G — Roof Terminology & Pitch ------------------------------------------
   {
     id: 'lesson-roof-terminology-pitch',

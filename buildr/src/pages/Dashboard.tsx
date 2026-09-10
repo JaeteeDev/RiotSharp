@@ -13,6 +13,7 @@ import {
   findWeakestArea,
   recommendNextLesson,
   dueFlashcards,
+  computeRevisionDue,
 } from '../lib/progress'
 import { learningAreaById } from '../data/learningAreas'
 import clsx from 'clsx'
@@ -34,6 +35,7 @@ export function Dashboard() {
   const questionAttempts = useAppStore((s) => s.questionAttempts)
   const flashcardRecords = useAppStore((s) => s.flashcardRecords)
   const streakDays = useAppStore((s) => s.streakDays)
+  const topicWeakness = useAppStore((s) => s.topicWeakness)
 
   const [selectedLayer, setSelectedLayer] = useState<HouseLayerId | null>(null)
   const [exploded, setExploded] = useState(false)
@@ -44,7 +46,8 @@ export function Dashboard() {
   const weakest = findWeakestArea(lessonProgress, questionAttempts)
   const nextLesson = recommendNextLesson(lessonProgress)
   const nextLessonArea = learningAreaById(nextLesson.learningAreaId)
-  const revisionDueCount = dueFlashcards(flashcardRecords).length
+  const revisionDueAreas = computeRevisionDue(topicWeakness)
+  const revisionDueCount = dueFlashcards(flashcardRecords).length + revisionDueAreas.length
 
   const lessonPct = overall.pct
 
@@ -86,7 +89,7 @@ export function Dashboard() {
               <StatCell label="Qualification" icon={<Target className="h-3.5 w-3.5" />} value={lessonPct} suffix="%" />
               <StatCell label="Quiz Accuracy" icon={<TrendingDown className="h-3.5 w-3.5" />} value={accuracy} suffix="%" border="left" />
               <StatCell label="Streak" icon={<Flame className="h-3.5 w-3.5" />} value={streakDays} suffix={streakDays === 1 ? ' day' : ' days'} border="top" />
-              <StatCell label="Revision Due" icon={<LayersIcon className="h-3.5 w-3.5" />} value={revisionDueCount} border="both" />
+              <StatCell label="Revision Due" icon={<LayersIcon className="h-3.5 w-3.5" />} value={revisionDueCount} border="both" onClick={revisionDueCount > 0 ? () => navigate('/progress') : undefined} />
             </div>
             <div className="hairline" />
             <button
@@ -193,17 +196,22 @@ function StatCell({
   suffix,
   icon,
   border,
+  onClick,
 }: {
   label: string
   value: number | null
   suffix?: string
   icon: React.ReactNode
   border?: 'left' | 'top' | 'both'
+  onClick?: () => void
 }) {
+  const Tag = onClick ? 'button' : 'div'
   return (
-    <div
+    <Tag
+      onClick={onClick}
       className={clsx(
-        'px-4 py-3.5',
+        'px-4 py-3.5 text-left transition-colors',
+        onClick && 'cursor-pointer hover:bg-ink-800/40',
         (border === 'left' || border === 'both') && 'border-l border-ink-700',
         (border === 'top' || border === 'both') && 'border-t border-ink-700',
       )}
@@ -215,7 +223,7 @@ function StatCell({
       <div className="font-display mt-1.5 text-[26px] font-semibold text-paper-100">
         {value === null ? <span className="text-mute-600">—</span> : <AnimatedNumber value={value} suffix={suffix} />}
       </div>
-    </div>
+    </Tag>
   )
 }
 

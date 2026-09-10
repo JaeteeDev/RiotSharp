@@ -28,9 +28,9 @@ export function Settings() {
 
   function exportData() {
     const state = useAppStore.getState()
-    const { lessonProgress, questionAttempts, flashcardRecords, settings: s, unlockedAchievementIds, streakDays, competencyRecorded } = state
+    const { lessonProgress, questionAttempts, flashcardRecords, settings: s, unlockedAchievementIds, streakDays, competencyRecorded, topicWeakness } = state
     const blob = new Blob(
-      [JSON.stringify({ lessonProgress, questionAttempts, flashcardRecords, settings: s, unlockedAchievementIds, streakDays, competencyRecorded }, null, 2)],
+      [JSON.stringify({ lessonProgress, questionAttempts, flashcardRecords, settings: s, unlockedAchievementIds, streakDays, competencyRecorded, topicWeakness }, null, 2)],
       { type: 'application/json' },
     )
     const url = URL.createObjectURL(blob)

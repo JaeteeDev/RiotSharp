@@ -4,8 +4,13 @@ import { Check, X, HelpCircle } from 'lucide-react'
 import clsx from 'clsx'
 import type { MiniQuestion } from '../../types'
 
-export function MiniQuestionBlock({ question }: { question: MiniQuestion }) {
+export function MiniQuestionBlock({ question, onAnswered }: { question: MiniQuestion; onAnswered?: (correct: boolean) => void }) {
   const [selected, setSelected] = useState<number | null>(null)
+
+  function choose(i: number) {
+    setSelected(i)
+    onAnswered?.(i === question.correctIndex)
+  }
 
   return (
     <div className="rounded-[3px] border border-blue-500/25 bg-blue-500/[0.04] p-5">
@@ -23,7 +28,7 @@ export function MiniQuestionBlock({ question }: { question: MiniQuestion }) {
             <button
               key={i}
               disabled={revealed}
-              onClick={() => setSelected(i)}
+              onClick={() => choose(i)}
               className={clsx(
                 'flex items-center justify-between rounded-[3px] border px-3.5 py-2.5 text-left text-[13px] transition-colors',
                 !revealed && 'border-ink-600 text-paper-300 hover:border-blue-500/40 hover:bg-blue-500/5',

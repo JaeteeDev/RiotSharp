@@ -5,6 +5,8 @@ import { Onboarding } from './pages/Onboarding'
 import { Splash } from './pages/Splash'
 import { Dashboard } from './pages/Dashboard'
 import { Course } from './pages/Course'
+import { LearningArea } from './pages/LearningArea'
+import { Module } from './pages/Module'
 import { UnitDetail } from './pages/UnitDetail'
 import { LessonViewer } from './pages/LessonViewer'
 import { Workshop } from './pages/Workshop'
@@ -58,6 +60,8 @@ export default function App() {
         <Route element={<AppShell />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/course" element={<Course />} />
+          <Route path="/course/area/:areaId" element={<LearningArea />} />
+          <Route path="/course/module/:moduleId" element={<Module />} />
           <Route path="/course/unit/:code" element={<UnitDetail />} />
           <Route path="/course/lesson/:lessonId" element={<LessonViewer />} />
           <Route path="/workshop" element={<Workshop />} />

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Trophy, RotateCcw, ArrowLeft, Check, X } from 'lucide-react'
+import { Trophy, RotateCcw, ArrowLeft, Check, X, ChevronDown } from 'lucide-react'
 import clsx from 'clsx'
 import { buildQuiz, quizModeLabel, type QuizMode } from '../lib/quizEngine'
 import { useAppStore } from '../store/useAppStore'
@@ -10,6 +10,20 @@ import { QuizQuestionCard, NextButton } from '../components/quiz/QuizQuestionCar
 import { ProgressRing } from '../components/ui/ProgressRing'
 import { Panel } from '../components/ui/Panel'
 import { learningAreaById } from '../data/learningAreas'
+import type { QuizQuestion } from '../types'
+
+function correctAnswerText(q: QuizQuestion): string {
+  switch (q.type) {
+    case 'calculation':
+      return `${q.numericAnswer} ${q.numericUnit ?? ''}`.trim()
+    case 'multiple-select':
+      return (q.correctIndices ?? []).map((i) => q.options?.[i]).filter(Boolean).join(', ')
+    case 'order-steps':
+      return (q.correctOrder ?? []).map((i) => q.orderItems?.[i]).filter(Boolean).join(' → ')
+    default:
+      return q.options?.[q.correctIndex ?? 0] ?? ''
+  }
+}
 
 export function QuizSession() {
   const { mode } = useParams<{ mode: QuizMode }>()
@@ -18,8 +32,9 @@ export function QuizSession() {
   const lessonProgress = useAppStore((s) => s.lessonProgress)
   const attempts = useAppStore((s) => s.questionAttempts)
   const recordQuestionAttempt = useAppStore((s) => s.recordQuestionAttempt)
+  const recordQuizWeaknessSignal = useAppStore((s) => s.recordQuizWeaknessSignal)
 
-  const state = (location.state ?? {}) as { learningAreaId?: string; topic?: string }
+  const state = (location.state ?? {}) as { learningAreaId?: string; topic?: string; moduleId?: string }
   const resolvedMode: QuizMode = (mode as QuizMode) ?? 'quick'
 
   useBreadcrumb(['Quiz Centre', quizModeLabel[resolvedMode] ?? 'Quiz'])
@@ -30,6 +45,7 @@ export function QuizSession() {
   const [answered, setAnswered] = useState(false)
   const [results, setResults] = useState<boolean[]>([])
   const [finished, setFinished] = useState(false)
+  const [reviewOpen, setReviewOpen] = useState(false)
 
   const current = questions[index]
 
@@ -37,6 +53,7 @@ export function QuizSession() {
     setAnswered(true)
     setResults((r) => [...r, correct])
     recordQuestionAttempt({ questionId: current.id, correct, attemptedAt: Date.now(), quizSessionId: sessionId })
+    recordQuizWeaknessSignal(current.learningAreaId, correct)
   }
 
   function handleNext() {
@@ -63,8 +80,21 @@ export function QuizSession() {
     const score = results.filter(Boolean).length
     const pct = Math.round((score / results.length) * 100)
     const areaTitle = state.learningAreaId ? learningAreaById(state.learningAreaId)?.title : undefined
+    const wrongQuestions = questions.filter((_, i) => results[i] === false)
+
+    const topicBreakdown = Object.values(
+      questions.reduce<Record<string, { topic: string; correct: number; total: number }>>((acc, q, i) => {
+        acc[q.topic] ??= { topic: q.topic, correct: 0, total: 0 }
+        acc[q.topic].total += 1
+        if (results[i]) acc[q.topic].correct += 1
+        return acc
+      }, {}),
+    ).map((t) => ({ ...t, pct: Math.round((t.correct / t.total) * 100) }))
+    const weakTopics = topicBreakdown.filter((t) => t.pct < 70).sort((a, b) => a.pct - b.pct)
+    const strongTopics = topicBreakdown.filter((t) => t.pct >= 70).sort((a, b) => b.pct - a.pct)
+
     return (
-      <div className="flex h-full flex-col items-center justify-center px-8 text-center">
+      <div className="mx-auto flex min-h-full max-w-2xl flex-col items-center px-8 py-10 text-center">
         <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: 'spring', stiffness: 300, damping: 22 }}>
           <ProgressRing value={pct} size={160} strokeWidth={10} color={pct >= 70 ? 'var(--color-good-400)' : 'var(--color-signal-400)'} />
         </motion.div>
@@ -78,25 +108,72 @@ export function QuizSession() {
           {quizModeLabel[resolvedMode]}
           {areaTitle ? ` · ${areaTitle}` : ''}
         </p>
-        <div className="mt-4 flex gap-1.5">
+        <div className="mt-4 flex flex-wrap justify-center gap-1.5">
           {results.map((r, i) => (
             <span key={i} className={clsx('h-1.5 w-6 rounded-full', r ? 'bg-good-400' : 'bg-bad-400/70')} />
           ))}
         </div>
-        <div className="mt-9 flex gap-3">
+
+        {topicBreakdown.length > 1 && (
+          <div className="mt-8 w-full text-left">
+            <div className="text-technical mb-2.5 text-center text-[10px] uppercase tracking-wide text-mute-500">Performance By Topic</div>
+            <Panel className="flex flex-col divide-y divide-ink-800 overflow-hidden">
+              {[...weakTopics, ...strongTopics].map((t) => (
+                <div key={t.topic} className="flex items-center justify-between gap-3 px-4 py-2.5">
+                  <span className="truncate text-[12.5px] text-paper-300">{t.topic}</span>
+                  <div className="flex shrink-0 items-center gap-2">
+                    <div className="h-1.5 w-24 overflow-hidden rounded-full bg-ink-700">
+                      <div className={clsx('h-full rounded-full', t.pct >= 70 ? 'bg-good-400' : 'bg-warn-400')} style={{ width: `${t.pct}%` }} />
+                    </div>
+                    <span className="text-technical w-9 text-right text-[11px] text-mute-500">{t.pct}%</span>
+                  </div>
+                </div>
+              ))}
+            </Panel>
+          </div>
+        )}
+
+        {wrongQuestions.length > 0 && (
+          <div className="mt-5 w-full text-left">
+            <button
+              onClick={() => setReviewOpen((v) => !v)}
+              className="flex w-full items-center justify-between rounded-[3px] border border-ink-600 bg-ink-850/60 px-4 py-3 text-left"
+            >
+              <span className="text-technical text-[10px] uppercase tracking-wide text-mute-400">Review Mistakes · {wrongQuestions.length}</span>
+              <motion.span animate={{ rotate: reviewOpen ? 180 : 0 }}>
+                <ChevronDown className="h-4 w-4 text-mute-500" />
+              </motion.span>
+            </button>
+            <AnimatePresence>
+              {reviewOpen && (
+                <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="mt-2.5 flex flex-col gap-2.5 overflow-hidden">
+                  {wrongQuestions.map((q) => (
+                    <div key={q.id} className="rounded-[3px] border border-bad-400/25 bg-bad-400/[0.04] px-4 py-3">
+                      <p className="text-[13px] text-paper-200">{q.prompt}</p>
+                      <p className="mt-1.5 text-[12px] text-good-400">Correct answer: {correctAnswerText(q)}</p>
+                      <p className="mt-1.5 text-[12px] leading-relaxed text-mute-400">{q.explanation}</p>
+                    </div>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
+
+        <div className="mt-9 flex flex-wrap justify-center gap-3">
           <button
-            onClick={() => navigate('/quiz')}
+            onClick={() => navigate(state.moduleId ? `/course/module/${state.moduleId}` : state.learningAreaId ? `/course/area/${state.learningAreaId}` : '/quiz')}
             className="flex items-center gap-1.5 rounded-[3px] border border-ink-500 px-5 py-2.5 text-[13px] text-paper-200 hover:border-ink-400"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
-            Quiz Centre
+            {state.moduleId ? 'Return to Module' : state.learningAreaId ? 'Return to Learning Area' : 'Quiz Centre'}
           </button>
           <button
             onClick={() => window.location.reload()}
             className="flex items-center gap-1.5 rounded-[3px] bg-signal-500 px-5 py-2.5 text-[13px] font-semibold text-ink-950 hover:bg-signal-400"
           >
             <RotateCcw className="h-3.5 w-3.5" />
-            Try Again
+            Retry Quiz
           </button>
         </div>
       </div>

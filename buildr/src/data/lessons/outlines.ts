@@ -2,8 +2,9 @@ import type { Lesson } from '../../types'
 import { learningAreas } from '../learningAreas'
 import { unitsForLearningArea } from '../units'
 import { flagshipLessons } from './flagship'
+import { wallFramingLessons } from './wallFraming'
 
-const flagshipAreaIds = new Set(flagshipLessons.map((l) => l.learningAreaId))
+const flagshipAreaIds = new Set([...flagshipLessons, ...wallFramingLessons].map((l) => l.learningAreaId))
 
 // Every learning area not yet given a full flagship lesson still gets a
 // properly structured outline lesson, so every navigation path in the app

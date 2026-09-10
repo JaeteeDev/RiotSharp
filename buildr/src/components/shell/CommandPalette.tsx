@@ -3,11 +3,15 @@ import { useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Search, ArrowRight, CornerDownLeft } from 'lucide-react'
 import { useUiStore } from '../../store/useUiStore'
+import { useAppStore } from '../../store/useAppStore'
 import { primaryNav } from '../../lib/nav'
 import { lessons } from '../../data/lessons'
 import { glossary } from '../../data/glossary'
 import { units } from '../../data/units'
 import { calculators } from '../../data/calculators'
+import { learningAreas } from '../../data/learningAreas'
+import { modules } from '../../data/modules'
+import { recommendNextLesson, computeRevisionDue } from '../../lib/progress'
 
 interface PaletteItem {
   id: string
@@ -21,6 +25,8 @@ export function CommandPalette() {
   const open = useUiStore((s) => s.commandPaletteOpen)
   const setOpen = useUiStore((s) => s.setCommandPaletteOpen)
   const navigate = useNavigate()
+  const lessonProgress = useAppStore((s) => s.lessonProgress)
+  const topicWeakness = useAppStore((s) => s.topicWeakness)
   const [query, setQuery] = useState('')
   const [activeIndex, setActiveIndex] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -42,9 +48,29 @@ export function CommandPalette() {
       action: () => navigate(n.path),
     }))
     const quick = [
+      { id: 'continue-learning', label: 'Continue Learning', sub: `Resume · ${recommendNextLesson(lessonProgress).title}`, group: 'Actions', action: () => navigate(`/course/lesson/${recommendNextLesson(lessonProgress).id}`) },
       { id: 'quick-quiz', label: 'Start Quick Quiz', sub: '10 random questions', group: 'Actions', action: () => navigate('/quiz/session/quick') },
+      { id: 'open-wall-framing', label: 'Open Wall Framing', sub: 'Learning Area', group: 'Actions', action: () => navigate('/course/area/wall-framing') },
+      { id: 'open-wall-framing-quiz', label: 'Open Wall Framing Quiz', sub: 'Module assessment', group: 'Actions', action: () => navigate('/quiz/session/unit', { state: { learningAreaId: 'wall-framing' } }) },
+      { id: 'revision-due', label: 'Revision Due', sub: `${computeRevisionDue(topicWeakness).length} topic(s) due for review`, group: 'Actions', action: () => navigate('/progress') },
+      { id: 'search-glossary', label: 'Search Glossary', sub: 'Reference', group: 'Actions', action: () => navigate('/reference') },
+      { id: 'open-progress', label: 'Open Progress', sub: 'Skill matrix', group: 'Actions', action: () => navigate('/progress') },
       { id: 'quick-calc', label: 'Open Roof Pitch Calculator', sub: 'Calculators', group: 'Actions', action: () => navigate('/calculators/roof-pitch') },
     ]
+    const areaItems = learningAreas.map((a) => ({
+      id: `area-${a.id}`,
+      label: a.title,
+      sub: `Learning Area · ${a.number}`,
+      group: 'Learning Areas',
+      action: () => navigate(`/course/area/${a.id}`),
+    }))
+    const moduleItems = modules.map((m) => ({
+      id: `module-${m.id}`,
+      label: m.title,
+      sub: 'Module',
+      group: 'Modules',
+      action: () => navigate(`/course/module/${m.id}`),
+    }))
     const lessonItems = lessons.map((l) => ({
       id: `lesson-${l.id}`,
       label: l.title,
@@ -73,8 +99,9 @@ export function CommandPalette() {
       group: 'Calculators',
       action: () => navigate(`/calculators/${c.id}`),
     }))
-    return [...quick, ...nav, ...lessonItems, ...termItems, ...unitItems, ...calcItems]
-  }, [navigate])
+    return [...quick, ...nav, ...areaItems, ...moduleItems, ...lessonItems, ...termItems, ...unitItems, ...calcItems]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigate, lessonProgress, topicWeakness])
 
   const filtered = useMemo(() => {
     if (!query.trim()) return items.filter((i) => i.group === 'Navigate' || i.group === 'Actions')

@@ -1,10 +1,11 @@
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowRight, Clock, ListChecks } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Boxes, Clock, ListChecks } from 'lucide-react'
 import clsx from 'clsx'
 import { lessonById, lessonsForLearningArea } from '../data/lessons'
 import { learningAreaById } from '../data/learningAreas'
+import { moduleById } from '../data/modules'
 import { glossary } from '../data/glossary'
 import { useAppStore } from '../store/useAppStore'
 import { useBreadcrumb } from '../store/useUiStore'
@@ -25,9 +26,13 @@ export function LessonViewer() {
   const visitLesson = useAppStore((s) => s.visitLesson)
   const setLessonConfidence = useAppStore((s) => s.setLessonConfidence)
   const setLessonStatus = useAppStore((s) => s.setLessonStatus)
+  const recordConfidenceWeaknessSignal = useAppStore((s) => s.recordConfidenceWeaknessSignal)
+  const recordQuizWeaknessSignal = useAppStore((s) => s.recordQuizWeaknessSignal)
   const progress = useAppStore((s) => (lesson ? s.lessonProgress[lesson.id] : undefined))
 
-  useBreadcrumb(['Course', area?.title ?? '', lesson?.title ?? ''])
+  const module = lesson?.moduleId ? moduleById(lesson.moduleId) : undefined
+
+  useBreadcrumb(['Course', area?.title ?? '', ...(module ? [module.title] : []), lesson?.title ?? ''])
 
   useEffect(() => {
     if (lesson) visitLesson(lesson.id)
@@ -45,13 +50,26 @@ export function LessonViewer() {
   const relatedTerms = glossary.filter((g) => lesson.relatedTermIds.includes(g.id))
   const siblingLessons = lessonsForLearningArea(area.id)
   const currentIndex = siblingLessons.findIndex((l) => l.id === lesson.id)
+  const prevLesson = currentIndex > 0 ? siblingLessons[currentIndex - 1] : undefined
   const nextLesson = siblingLessons[currentIndex + 1]
+
+  const currentLesson = lesson
+  function pickConfidence(level: ConfidenceLevel) {
+    setLessonConfidence(currentLesson.id, level)
+    recordConfidenceWeaknessSignal(currentLesson.learningAreaId, level)
+  }
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-[1fr_340px]">
       <div className="ruler-margin mx-auto w-full max-w-[900px] px-8 py-8 pl-12 lg:pl-14">
         <div className="text-technical mb-2 flex items-center gap-2 text-[11px] uppercase tracking-[0.14em] text-blue-400">
-          {area.number} · {area.title}
+          <button onClick={() => navigate(`/course/area/${area.id}`)} className="hover:text-blue-300">{area.number} · {area.title}</button>
+          {module && (
+            <>
+              <span className="text-mute-600">/</span>
+              <button onClick={() => navigate(`/course/module/${module.id}`)} className="hover:text-blue-300">{module.title}</button>
+            </>
+          )}
           {lesson.unitCode && <span className="text-mute-600">· {lesson.unitCode}</span>}
         </div>
         <h1 className="font-display text-[30px] font-semibold leading-tight text-paper-100">{lesson.title}</h1>
@@ -67,7 +85,12 @@ export function LessonViewer() {
 
         <div className="mt-8 flex flex-col gap-7">
           {lesson.blocks.map((block, i) => (
-            <LessonBlockRenderer key={i} block={block} index={i} />
+            <LessonBlockRenderer
+              key={i}
+              block={block}
+              index={i}
+              onMiniQuestionAnswered={(correct) => recordQuizWeaknessSignal(lesson.learningAreaId, correct)}
+            />
           ))}
         </div>
 
@@ -77,7 +100,7 @@ export function LessonViewer() {
             {confidenceOptions.map((c) => (
               <button
                 key={c.level}
-                onClick={() => setLessonConfidence(lesson.id, c.level)}
+                onClick={() => pickConfidence(c.level)}
                 className={clsx(
                   'flex-1 rounded-[3px] border px-3 py-2.5 text-[12.5px] font-medium transition-colors',
                   progress?.confidence === c.level
@@ -91,13 +114,24 @@ export function LessonViewer() {
           </div>
         </div>
 
-        <div className="mt-6 flex items-center justify-between">
-          <button
-            onClick={() => setLessonStatus(lesson.id, 'strong')}
-            className="rounded-[3px] bg-signal-500 px-5 py-2.5 text-[13px] font-semibold text-ink-950 transition-colors hover:bg-signal-400"
-          >
-            Mark Lesson Complete
-          </button>
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setLessonStatus(lesson.id, 'strong')}
+              className="rounded-[3px] bg-signal-500 px-5 py-2.5 text-[13px] font-semibold text-ink-950 transition-colors hover:bg-signal-400"
+            >
+              Mark Lesson Complete
+            </button>
+            {prevLesson && (
+              <button
+                onClick={() => navigate(`/course/lesson/${prevLesson.id}`)}
+                className="flex items-center gap-1.5 text-[13px] text-mute-400 hover:text-paper-200"
+              >
+                <ArrowLeft className="h-3.5 w-3.5" />
+                Previous
+              </button>
+            )}
+          </div>
           {nextLesson && (
             <button
               onClick={() => navigate(`/course/lesson/${nextLesson.id}`)}
@@ -146,6 +180,23 @@ export function LessonViewer() {
             Quiz Me On This Topic
           </button>
         )}
+
+        {area.id === 'wall-framing' && (
+          <button
+            onClick={() => navigate('/workshop')}
+            className="mt-2.5 flex w-full items-center justify-center gap-2 rounded-[3px] border border-blue-500/30 bg-blue-500/[0.05] px-4 py-2.5 text-[12.5px] font-medium text-blue-300 hover:border-blue-400/50"
+          >
+            <Boxes className="h-3.5 w-3.5" />
+            Open In Workshop
+          </button>
+        )}
+
+        <button
+          onClick={() => navigate(module ? `/course/module/${module.id}` : `/course/area/${area.id}`)}
+          className="mt-2.5 w-full rounded-[3px] px-4 py-2.5 text-center text-[12px] text-mute-500 hover:text-paper-200"
+        >
+          ← Back to {module ? module.title : area.title}
+        </button>
       </aside>
     </div>
   )

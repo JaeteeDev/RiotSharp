@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { TrendingUp, TrendingDown, Sparkles, BarChart3 } from 'lucide-react'
+import { TrendingUp, TrendingDown, Sparkles, BarChart3, RotateCcw } from 'lucide-react'
 import { learningAreas } from '../data/learningAreas'
 import { useAppStore } from '../store/useAppStore'
 import { useBreadcrumb } from '../store/useUiStore'
-import { computeAllAreaStats, computeOverallProgress, findStrongestArea, findWeakestArea, recommendNextLesson } from '../lib/progress'
+import { computeAllAreaStats, computeOverallProgress, findStrongestArea, findWeakestArea, recommendNextLesson, computeRevisionDue } from '../lib/progress'
 import { MasteryBadge } from '../components/ui/MasteryBadge'
 import { ProgressRing } from '../components/ui/ProgressRing'
 import { Panel } from '../components/ui/Panel'
@@ -22,12 +22,14 @@ export function Progress() {
   const navigate = useNavigate()
   const lessonProgress = useAppStore((s) => s.lessonProgress)
   const attempts = useAppStore((s) => s.questionAttempts)
+  const topicWeakness = useAppStore((s) => s.topicWeakness)
 
   const stats = computeAllAreaStats(lessonProgress, attempts)
   const overall = computeOverallProgress(lessonProgress)
   const strongest = findStrongestArea(lessonProgress, attempts)
   const weakest = findWeakestArea(lessonProgress, attempts)
   const next = recommendNextLesson(lessonProgress)
+  const revisionDue = computeRevisionDue(topicWeakness)
 
   if (overall.completed === 0 && attempts.length === 0) {
     return (
@@ -90,6 +92,32 @@ export function Progress() {
         </button>
       </Panel>
 
+      {revisionDue.length > 0 && (
+        <Panel className="mt-6 overflow-hidden" title="Revision Due">
+          {revisionDue.map((r, i) => {
+            const area = learningAreas.find((a) => a.id === r.learningAreaId)
+            return (
+              <button
+                key={r.learningAreaId}
+                onClick={() => navigate('/quiz/session/weak')}
+                className={`flex w-full items-center justify-between gap-3 px-5 py-3.5 text-left transition-colors hover:bg-ink-800/50 ${i !== 0 ? 'border-t border-ink-800' : ''}`}
+              >
+                <div className="flex items-center gap-3">
+                  <RotateCcw className="h-4 w-4 shrink-0 text-warn-400" />
+                  <div>
+                    <div className="text-[13.5px] font-medium text-paper-100">{r.topic}</div>
+                    <div className="text-[11.5px] text-mute-500">
+                      {r.reason === 'low-confidence' ? 'You rated this "Need Revision"' : r.reason === 'quiz-miss' ? 'Recent quiz answers missed here' : 'Due for a scheduled review'}
+                    </div>
+                  </div>
+                </div>
+                {area && <span className="text-technical text-[11px] text-mute-600">{area.number}</span>}
+              </button>
+            )
+          })}
+        </Panel>
+      )}
+
       <Panel className="mt-8 overflow-x-auto">
         <table className="w-full min-w-[800px] border-collapse text-left text-[13px]">
           <thead>
@@ -110,7 +138,7 @@ export function Progress() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: i * 0.015 }}
-                  onClick={() => navigate(`/course#${area.id}`)}
+                  onClick={() => navigate(`/course/area/${area.id}`)}
                   className="cursor-pointer border-b border-ink-800 transition-colors hover:bg-ink-850/60"
                 >
                   <td className="px-4 py-3">

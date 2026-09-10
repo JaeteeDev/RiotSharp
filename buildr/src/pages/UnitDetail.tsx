@@ -47,9 +47,12 @@ export function UnitDetail() {
 
   return (
     <div className="mx-auto max-w-[1300px] px-8 py-8">
-      <div className="text-technical mb-2 text-[11px] uppercase tracking-[0.16em] text-blue-400">
+      <button
+        onClick={() => navigate(`/course/area/${area.id}`)}
+        className="text-technical mb-2 text-[11px] uppercase tracking-[0.16em] text-blue-400 hover:text-blue-300"
+      >
         {area.number} · {area.title}
-      </div>
+      </button>
       <h1 className="text-technical text-[13px] tracking-wide text-mute-500">{unit.code}</h1>
       <h2 className="font-display mt-1 text-[30px] font-semibold uppercase leading-tight text-paper-100">{unit.name}</h2>
       <span className="text-technical mt-2 inline-block rounded border border-ink-600 px-2 py-0.5 text-[10px] uppercase text-mute-500">

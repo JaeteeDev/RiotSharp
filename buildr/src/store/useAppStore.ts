@@ -6,7 +6,9 @@ import type {
   LearningProgress,
   MasteryState,
   QuestionAttempt,
+  TopicWeakness,
 } from '../types'
+import { nextWeaknessOnConfidence, nextWeaknessOnQuiz } from '../lib/progress'
 
 export interface Settings {
   animations: boolean
@@ -35,6 +37,7 @@ interface AppState {
   streakDays: number
   lastActiveDay: string | null
   competencyRecorded: Record<string, boolean>
+  topicWeakness: Record<string, TopicWeakness>
 
   completeOnboarding: () => void
   setLastVisitedPath: (path: string) => void
@@ -48,6 +51,8 @@ interface AppState {
   resetTrainingData: () => void
   touchStreak: () => void
   setCompetencyRecorded: (unitCode: string, recorded: boolean) => void
+  recordQuizWeaknessSignal: (areaId: string, correct: boolean) => void
+  recordConfidenceWeaknessSignal: (areaId: string, confidence: ConfidenceLevel) => void
   importState: (data: Partial<AppState>) => void
 }
 
@@ -68,6 +73,7 @@ export const useAppStore = create<AppState>()(
       streakDays: 0,
       lastActiveDay: null,
       competencyRecorded: {},
+      topicWeakness: {},
 
       completeOnboarding: () => set({ onboardingComplete: true }),
       setLastVisitedPath: (path) => set({ lastVisitedPath: path }),
@@ -160,6 +166,16 @@ export const useAppStore = create<AppState>()(
       setCompetencyRecorded: (unitCode, recorded) =>
         set((s) => ({ competencyRecorded: { ...s.competencyRecorded, [unitCode]: recorded } })),
 
+      recordQuizWeaknessSignal: (areaId, correct) =>
+        set((s) => ({
+          topicWeakness: { ...s.topicWeakness, [areaId]: { areaId, ...nextWeaknessOnQuiz(s.topicWeakness[areaId], correct) } },
+        })),
+
+      recordConfidenceWeaknessSignal: (areaId, confidence) =>
+        set((s) => ({
+          topicWeakness: { ...s.topicWeakness, [areaId]: { areaId, ...nextWeaknessOnConfidence(s.topicWeakness[areaId], confidence) } },
+        })),
+
       importState: (data) => set((s) => ({ ...s, ...data })),
 
       resetTrainingData: () =>
@@ -174,8 +190,9 @@ export const useAppStore = create<AppState>()(
           streakDays: 0,
           lastActiveDay: null,
           competencyRecorded: {},
+          topicWeakness: {},
         }),
     }),
-    { name: 'buildr-training-data', version: 1 },
+    { name: 'buildr-training-data', version: 2 },
   ),
 )

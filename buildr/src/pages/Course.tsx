@@ -5,7 +5,6 @@ import { List, GitBranch, ChevronRight } from 'lucide-react'
 import clsx from 'clsx'
 import { learningAreas } from '../data/learningAreas'
 import { unitsForLearningArea } from '../data/units'
-import { lessonsForLearningArea } from '../data/lessons'
 import { useAppStore } from '../store/useAppStore'
 import { useBreadcrumb } from '../store/useUiStore'
 import { computeLearningAreaStats } from '../lib/progress'
@@ -54,7 +53,6 @@ export function Course() {
             {learningAreas.map((area, i) => {
               const stat = computeLearningAreaStats(area.id, lessonProgress, questionAttempts)
               const areaUnits = unitsForLearningArea(area.id)
-              const areaLessons = lessonsForLearningArea(area.id)
               return (
                 <motion.button
                   key={area.id}
@@ -62,7 +60,7 @@ export function Course() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: Math.min(i * 0.015, 0.3) }}
-                  onClick={() => (areaLessons[0] ? navigate(`/course/lesson/${areaLessons[0].id}`) : undefined)}
+                  onClick={() => navigate(`/course/area/${area.id}`)}
                   className={clsx(
                     'group relative flex w-full items-center gap-5 px-5 py-4 text-left transition-colors hover:bg-ink-800/50',
                     i !== 0 && 'border-t border-ink-800',
