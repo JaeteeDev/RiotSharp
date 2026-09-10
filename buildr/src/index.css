@@ -1,0 +1,162 @@
+@import "tailwindcss";
+
+@theme {
+  /* ---- Type ---- */
+  --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", monospace;
+
+  /* ---- Core surfaces ---- */
+  --color-ink-950: #08090b;
+  --color-ink-900: #0c0e11;
+  --color-ink-850: #101318;
+  --color-ink-800: #14171d;
+  --color-ink-700: #1b1f27;
+  --color-ink-600: #242a34;
+  --color-ink-500: #313a47;
+  --color-ink-400: #454f5e;
+
+  /* ---- Text ---- */
+  --color-paper-100: #f4f1ea;
+  --color-paper-200: #e5e1d6;
+  --color-paper-300: #cdc8bb;
+  --color-mute-400: #9aa0a8;
+  --color-mute-500: #7b8290;
+  --color-mute-600: #5c636f;
+
+  /* ---- Timber / tan accents ---- */
+  --color-timber-300: #d8b989;
+  --color-timber-400: #c79f6a;
+  --color-timber-500: #b3854e;
+  --color-timber-600: #8f6a3c;
+
+  /* ---- Construction orange (primary accent) ---- */
+  --color-signal-300: #ff9d5c;
+  --color-signal-400: #ff7f32;
+  --color-signal-500: #f6641a;
+  --color-signal-600: #d9500f;
+
+  /* ---- Blueprint blue (technical accent) ---- */
+  --color-blue-300: #8fc4e8;
+  --color-blue-400: #5fa4d6;
+  --color-blue-500: #3f84bd;
+  --color-blue-600: #2d6493;
+
+  /* ---- Status ---- */
+  --color-good-400: #6fcf97;
+  --color-good-500: #4fae78;
+  --color-warn-400: #f2c94c;
+  --color-bad-400: #eb5757;
+
+  --animate-fade-in: fade-in 0.4s ease-out;
+  --animate-rise: rise 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+:root {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-ink-950);
+  color: var(--color-paper-200);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow: hidden;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-signal-500) 35%, transparent);
+  color: var(--color-paper-100);
+}
+
+/* ---- Scrollbars ---- */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-ink-500) transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--color-ink-500);
+  border-radius: 4px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ink-400);
+}
+
+/* ---- Focus states ---- */
+:focus-visible {
+  outline: 2px solid var(--color-signal-400);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ---- Blueprint drafting backdrop ---- */
+.drafting-field {
+  position: relative;
+  background-color: var(--color-ink-950);
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--color-blue-400) 5%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--color-blue-400) 5%, transparent) 1px, transparent 1px),
+    linear-gradient(color-mix(in srgb, var(--color-blue-400) 9%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--color-blue-400) 9%, transparent) 1px, transparent 1px);
+  background-size: 12px 12px, 12px 12px, 96px 96px, 96px 96px;
+  background-position: -1px -1px;
+}
+
+.drafting-field::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 55% at 18% 8%, color-mix(in srgb, var(--color-signal-500) 6%, transparent), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 100% 100%, color-mix(in srgb, var(--color-blue-500) 7%, transparent), transparent 60%);
+}
+
+.text-technical {
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+}
+
+.panel-edge {
+  border: 1px solid var(--color-ink-600);
+}
+
+.hairline {
+  background: linear-gradient(90deg, transparent, var(--color-ink-500) 15%, var(--color-ink-500) 85%, transparent);
+  height: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
